@@ -23,10 +23,9 @@ export default function Home() {
         // handle success
         var rockets = []
         for (let index = 0; index < response.data.count; index++) {
-          //console.log(response.data.result[index].vehicle.name);
           rockets[index] = response.data.result[index]
         }
-        console.log(rockets)
+        //console.log(rockets)
         setLaunches(rockets);
       })
       .catch(function (error) {
