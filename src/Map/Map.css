@@ -15,4 +15,5 @@
 .ol-full-screen {
     bottom: .5em;
     right: .5em;
+    opacity: 0;
 }
