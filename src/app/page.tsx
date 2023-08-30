@@ -10,18 +10,7 @@ import { fromLonLat } from "ol/proj";
 import { Controls, FullScreenControl } from "../Controls";
 import mapConfig from "./config.json";
 import axios from 'axios';
-import { coordinateRelationship } from 'ol/extent';
 import { Coordinate } from 'ol/coordinate';
-import { Circle } from 'ol/geom';
-import FeatureStyles from "../Features/Styles";
-import { Feature, View } from 'ol';
-import { features } from 'process';
-import Style from 'ol/style/Style';
-import { OSM } from 'ol/source';
-import GeoJSON from "ol/format/GeoJSON";
-import VectorSource from 'ol/source/Vector';
-import { Fill, Stroke } from 'ol/style';
-import { GeoapifyContext, GeoapifyGeocoderAutocomplete } from '@geoapify/react-geocoder-autocomplete';
 
 
 export default function Home() {
@@ -38,12 +27,7 @@ export default function Home() {
   const [zoom, setZoom] = useState(19);
   const [domLoaded, setDomLoaded] = useState(false);
   const [coordinates, setCoordinates] = useState<Coordinate[]>();
-  const [type, setType] = useState();
-  const [language, setLanguage] = useState();
-  const [position, setPosition] = useState();
-  const [countryCodes, setCountryCodes] = useState();
-  const [limit, setLimit] = useState(5);
-  const [displayValue, setDisplayValue] = useState("");
+
   const [address, setAddress] = useState("");
   type addressSuggesstion = {
     "properties": {
