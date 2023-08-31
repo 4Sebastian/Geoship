@@ -11,29 +11,32 @@ import VectorSource from 'ol/source/Vector';
 
 
 export default function MapContainer() {
-    const circleFeature = new Feature({
-        geometry: new Circle([29, -85], 50),
-    });
-
-    new Map({
-        controls: [],
-        layers: [
-            new TileLayer({
-                source: new OSM(),
-                visible: true,
-            }),
-            new VectorLayer({
-                source: new VectorSource({
-                    features: [circleFeature],
+    useEffect(() => {
+        const circleFeature = new Feature({
+            geometry: new Circle([29, -85], 50),
+        });
+    
+        new Map({
+            controls: [],
+            layers: [
+                new TileLayer({
+                    source: new OSM(),
+                    visible: true,
                 }),
+                new VectorLayer({
+                    source: new VectorSource({
+                        features: [circleFeature],
+                    }),
+                }),
+            ],
+            target: 'map-container',
+            view: new View({
+                center: [29, -85],
+                zoom: 19,
             }),
-        ],
-        target: 'map-container',
-        view: new View({
-            center: [29, -85],
-            zoom: 19,
-        }),
-    });
+        });
+    }, [])
+    
 
     return (
         <Box id="map-container" sx={{ width: 1, height: 1 }}></Box>

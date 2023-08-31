@@ -17,11 +17,12 @@ export default function Address() {
                     console.log(err)
                 })
         }
-
     }, [address])
 
     function validAddresses() {
-        if (address.length == 0) { return false; }//If its empty, don't show
+        if (addressSuggestions.length == 0) { return false; }//If suggestion list empty, don't show
+
+        if (address == "") { return false; }//If address input is empty
             
         for (const element of addressSuggestions) { //If the current address is a suggestion, don't show
             if (element.properties.formatted == address) { return false; }

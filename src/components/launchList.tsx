@@ -38,11 +38,16 @@ export default function LaunchList() {
                     <Typography>Upcoming Launches</Typography>
                 </Paper>
                 <List>
-                    {launches.map((value) => (
-                        <ListItem key={value.id}>
-                            <ListItemText primary={`Rocket: ${value.vehicle.name}`} />
+                    {launches.length == 0 ?
+                        <ListItem key="loading">
+                            <ListItemText primary={`Loading...`} />
                         </ListItem>
-                    ))}
+                        :
+                        launches.map((value) => (
+                            <ListItem key={value.id}>
+                                <ListItemText primary={`Rocket: ${value.vehicle.name}`} />
+                            </ListItem>
+                        ))}
                 </List>
             </Stack>
         </Paper>
