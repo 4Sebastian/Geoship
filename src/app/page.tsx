@@ -3,15 +3,17 @@ import { Box, List, ListItem, ListItemButton, ListItemText, Paper, Stack, TextFi
 
 import StarIcon from '@mui/icons-material/Star'
 import React, { useState, useEffect } from "react";
-import Map from "../Map";
-import { Layers, TileLayer, VectorLayer } from "../Layers";
-import { osm, vector } from "../Source";
-import { fromLonLat } from "ol/proj";
-import { Controls, FullScreenControl } from "../Controls";
 import mapConfig from "./config.json";
 import axios from 'axios';
 import { Coordinate } from 'ol/coordinate';
-
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
+import {Feature, Map, View} from 'ol';
+import {fromLonLat} from 'ol/proj';
+import { Circle } from 'ol/geom';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import { defaults as defaultControls} from 'ol/control.js';
 
 export default function Home() {
   const [launches, setLaunches] = useState([
@@ -23,9 +25,6 @@ export default function Home() {
       }
     }
   ]);
-  const [center, setCenter] = useState(mapConfig.center);
-  const [zoom, setZoom] = useState(19);
-  const [domLoaded, setDomLoaded] = useState(false);
   const [coordinates, setCoordinates] = useState<Coordinate[]>();
 
   const [address, setAddress] = useState("");
@@ -37,9 +36,7 @@ export default function Home() {
 
   const [addressSuggestions, setAddressSuggesstions] = useState<addressSuggesstion[]>([]);
 
-  useEffect(() => {
-    setDomLoaded(true);
-  }, []);
+
 
   useEffect(() => {
     if (address != "") {
@@ -72,20 +69,38 @@ export default function Home() {
     return true;
   }
 
-  function onPlaceSelect(value: any) {
-    console.log(value);
-  }
-
-  function onSuggectionChange(value: any) {
-    console.log(value);
-  }
+  useEffect(() => {
+    const circleFeature = new Feature({
+      geometry: new Circle([29, -85], 50),
+    });
+  
+    new Map({
+      controls: [],
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+          visible: true,
+        }),
+        new VectorLayer({
+          source: new VectorSource({
+            features: [circleFeature],
+          }),
+        }),
+      ],
+      target: 'map-container',
+      view: new View({
+        center: [29, -85],
+        zoom: 19,
+      }),
+    });
+  }, [])
+  
 
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
-    // Update the document title using the browser API
-    document.title = `GeoShip`;
-    axios.get('https://fdo.rocketlaunch.live/json/launches/next/5')
+    const getRockets = async () => {
+      axios.get('https://fdo.rocketlaunch.live/json/launches/next/5')
       .then(async function (response) {
         // handle success
         var rockets = []
@@ -115,12 +130,17 @@ export default function Home() {
       .finally(function () {
         // always executed
       });
+    }
+
+    getRockets();
+    
 
   }, []);
 
-  if (!domLoaded) {
-    return <div></div>
-  }
+
+
+  
+
 
 
   return (
@@ -172,18 +192,10 @@ export default function Home() {
       </Stack>
 
 
-      {domLoaded &&
+      
         <Box sx={{ position: "absolute", top: 0, right: 0, width: 1, height: 1, zIndex: 1, pointerEvents: "auto" }}>
-          <Map center={fromLonLat(center)} zoom={zoom}>
-            <Layers>
-              <TileLayer source={osm()} zIndex={0} />
-              
-            </Layers>
-            <Controls>
-              <FullScreenControl />
-            </Controls>
-          </Map>
-        </Box>}
+          <Box id="map-container" sx={{width: 1, height: 1}}></Box>
+        </Box>
     </Box>
   )
 }
