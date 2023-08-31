@@ -3,17 +3,14 @@ import { Box, List, ListItem, ListItemButton, ListItemText, Paper, Stack, TextFi
 
 import StarIcon from '@mui/icons-material/Star'
 import React, { useState, useEffect } from "react";
-import mapConfig from "./config.json";
 import axios from 'axios';
 import { Coordinate } from 'ol/coordinate';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import {Feature, Map, View} from 'ol';
-import {fromLonLat} from 'ol/proj';
 import { Circle } from 'ol/geom';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { defaults as defaultControls} from 'ol/control.js';
 
 export default function Home() {
   const [launches, setLaunches] = useState([
