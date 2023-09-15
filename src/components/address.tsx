@@ -4,7 +4,7 @@ import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
-export default function Address() {
+export default function Address(props:{setAddress: Function}) {
     const [address, setAddress] = useState("");
     const [addressSuggestions, setAddressSuggesstions] = useState<any[]>([]);
 
@@ -12,6 +12,7 @@ export default function Address() {
         if (address != "") {
             axios.get(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=6996746ace5b4605a490e1625c60f468`)
                 .then(function (response) {
+                    console.log(response)
                     setAddressSuggesstions(response.data.features)
                 }).catch((err) => {
                     console.log(err)
@@ -30,6 +31,12 @@ export default function Address() {
         return true;
     }
 
+    function handleAddress(value: any){
+        setAddress(value.properties.formatted)
+        props.setAddress(value)
+        console.log(value)
+    }
+
     return (
         <Paper elevation={10} sx={{ width: 0.4, height: "min-content", pointerEvents: "auto" }}>
             <Paper elevation={2} sx={{ width: 1 }}>
@@ -39,7 +46,7 @@ export default function Address() {
                 <List>
                     {addressSuggestions.map((value) => (
                         <ListItem key={value.properties.formatted}>
-                            <ListItemButton onClick={() => setAddress(value.properties.formatted)}>
+                            <ListItemButton onClick={() => handleAddress(value)}>
                                 <ListItemText primary={`${value.properties.formatted}`} />
                             </ListItemButton>
                         </ListItem>
