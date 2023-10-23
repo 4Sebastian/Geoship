@@ -47,8 +47,10 @@ export default function LaunchList() {
     }, []);
 
     function getDate(est_date: any){
-        var date = new Date(est_date.year, est_date.month, est_date.day)
-        
+        var date = new Date(est_date.year, est_date.month-1, est_date.day)
+        console.log(est_date.year, est_date.month-1, est_date.day)
+        //console.log(date);
+
         return date.toDateString()
     }
 
@@ -79,10 +81,10 @@ export default function LaunchList() {
 
 
     function getTimeTillLaunch(){
-        console.log(estimatedDate)
+       
         if(estimatedDate != undefined){
-            var date = new Date(estimatedDate.year, estimatedDate.month, estimatedDate.day)
-            var today = new Date(Date.now())
+            var date = new Date(estimatedDate.year, estimatedDate.month-1, estimatedDate.day)
+            var today = new Date(Date.now());
     
             var difference = date.getTime() - today.getTime();
     
