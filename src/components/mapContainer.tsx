@@ -34,6 +34,13 @@ export default function MapContainer(props: { address: any , launches: any}) {
     const [launchFeature, setLaunchFeature] = useState<Feature>(new Feature());
     const vector = new VectorLayer({
         source: source,
+        style: {
+            'fill-color': 'rgba(255, 255, 255, 0.2)',
+            'stroke-color': '#ffcc33',
+            'stroke-width': 3,
+            'circle-radius': 15,
+            'circle-fill-color': '#ffcc33',
+        }
     });
 
     useEffect(() => {
@@ -49,7 +56,7 @@ export default function MapContainer(props: { address: any , launches: any}) {
         if(props.address){
             source.removeFeature(addressFeature)
             var feat = new Feature({
-                geometry: new Circle(fromLonLat(props.address.geometry.coordinates), 50),
+                geometry: new Point(fromLonLat(props.address.geometry.coordinates)),
             })
             view.setCenter(fromLonLat(props.address.geometry.coordinates))
             view.setZoom(20)
