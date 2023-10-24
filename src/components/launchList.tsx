@@ -22,7 +22,7 @@ export default function LaunchList() {
                 console.log(response)
                 for (let index = 0; index < response.data.count; index++) {
                     await new Promise(res => setTimeout(res, 1000)).then(() => {
-                        var location = encodeURI(response.data.result[index].pad.name)
+                        var location = encodeURI(response.data.result[index].pad.name + ' ' + response.data.result[index].pad.location.name)
                         console.log(location)
                         axios.get(`https://geocode.maps.co/search?q={${location}}`)
                             .then(function (response2) {
