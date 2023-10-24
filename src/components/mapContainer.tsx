@@ -20,7 +20,7 @@ import { StyleFunction } from 'ol/style/Style';
 import { Coordinate } from 'ol/coordinate';
 
 
-export default function MapContainer(props: { address: any }) {
+export default function MapContainer(props: { address: any , launches: any}) {
     const raster = new TileLayer({
         source: new OSM(),
     });
@@ -31,6 +31,7 @@ export default function MapContainer(props: { address: any }) {
         zoom: 20,
     }));
     const [addressFeature, setAddressFeature] = useState<Feature>(new Feature());
+    const [launchFeature, setLaunchFeature] = useState<Feature>(new Feature());
     const vector = new VectorLayer({
         source: source,
     });
@@ -57,6 +58,24 @@ export default function MapContainer(props: { address: any }) {
         } 
     }, [props.address])
 
+    useEffect(() => {
+        if(props.launches){
+            console.log(props.launches);
+            for (let index = 0; index < props.launches.length; index++){
+                if(props.launches[index] && props.launches[index].length >= 2){
+                    console.log(index);
+                    console.log(fromLonLat([props.launches[index][1], props.launches[index][0]]))
+                    //source.removeFeature(launchFeature)
+                    var feat = new Feature({
+                        geometry: new Circle(fromLonLat([props.launches[index][1], props.launches[index][0]]), 500),
+                    })
+                    view.setCenter(fromLonLat([props.launches[index][1], props.launches[index][0]]))
+                    //setLaunchFeature(feat)
+                    source.addFeature(feat);
+                }  
+            }  
+        } 
+    }, [props.launches])
 
     return (
         <Box sx={{ width: 1, height: 1 }}>

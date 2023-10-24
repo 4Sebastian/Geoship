@@ -3,7 +3,7 @@ import { Box, Grid, List, ListItem, ListItemText, Paper, Stack, Tooltip, Typogra
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
-export default function LaunchList() {
+export default function LaunchList(props:{setCoordinates: Function}) {
     const [launches, setLaunches] = useState<any[]>([]);
     const [coordinates, setCoordinates] = useState<number[][]>();
     const [hoveredItem, setHoveredItem] = useState<any>(null);
@@ -23,13 +23,14 @@ export default function LaunchList() {
                         var location = (response.data.result[index].pad.name).replace(/ /g, "+")
                         axios.get(`https://geocode.maps.co/search?q={${location}}`)
                             .then(function (response) {
-                                coordinates[index] = [response.data[0].lat, response.data[0].lon]
+                                coordinates[index] = [parseFloat(response.data[0].lat), parseFloat(response.data[0].lon)]
                             })
                     });
                     rockets[index] = response.data.result[index]
                 }
                 setLaunches(rockets);
                 setCoordinates(coordinates);
+                props.setCoordinates(coordinates);
             })
             .catch(function (error) {
                 console.log(error);
