@@ -18,16 +18,43 @@ export default function LaunchList() {
             .then(async function (response) {
                 var rockets = []
                 var coordinates: number[][] = [];
+                var fixes: {index: number, location: string}[] = [];
+                console.log(response)
                 for (let index = 0; index < response.data.count; index++) {
                     await new Promise(res => setTimeout(res, 1000)).then(() => {
-                        var location = (response.data.result[index].pad.name).replace(/ /g, "+")
+                        var location = encodeURI(response.data.result[index].pad.name)
+                        console.log(location)
                         axios.get(`https://geocode.maps.co/search?q={${location}}`)
-                            .then(function (response) {
-                                coordinates[index] = [response.data[0].lat, response.data[0].lon]
+                            .then(function (response2) {
+                                console.log(response2)
+                                if(response2.data && response2.data.length > 0){
+                                    coordinates[index] = [response2.data[0].lat, response2.data[0].lon]
+                                }else{
+                                    fixes.push({index: index, location: response.data.result[index].pad.location.name})
+                                }
+                                
                             })
                     });
                     rockets[index] = response.data.result[index]
                 }
+                
+                for (let index = 0; index < fixes.length; index++) {
+                    await new Promise(res => setTimeout(res, 1000)).then(() => {
+                        var location = encodeURI(fixes[index].location)
+                        console.log(location)
+                        axios.get(`https://geocode.maps.co/search?q={${location}}`)
+                            .then(function (response2) {
+                                console.log(response2)
+                                if(response2.data && response2.data.length > 0){
+                                    coordinates[index] = [response2.data[0].lat, response2.data[0].lon]
+                                }else{
+                                    console.log("Impossible")
+                                }
+                                
+                            })
+                    });
+                }
+
                 setLaunches(rockets);
                 setCoordinates(coordinates);
             })
@@ -57,7 +84,7 @@ export default function LaunchList() {
     function handleHover(value: any){
         setHoveredItem(value)
         if(value){
-            setEstimatedDate(value.est_date)
+            setEstimatedDate(value.t0)
             setTicking(true)
         }else{
             setEstimatedDate(undefined)
@@ -83,11 +110,13 @@ export default function LaunchList() {
     function getTimeTillLaunch(){
        
         if(estimatedDate != undefined){
-            var date = new Date(estimatedDate.year, estimatedDate.month-1, estimatedDate.day)
+            //"2023-10-26T03:14Z"
+            var date = new Date(estimatedDate)
             var today = new Date(Date.now());
     
             var difference = date.getTime() - today.getTime();
-    
+            //var diffDate = new Date(difference)
+
             var seconds = Math.floor(difference / 1000);
             var minutes = Math.floor(seconds / 60);
             var hours = Math.floor(minutes / 60);
@@ -96,8 +125,12 @@ export default function LaunchList() {
             hours %= 24;
             minutes %= 60;
             seconds %= 60;
-    
+
+            
+
+            // console.log(new Date(difference))
             setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
+            //setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
             return `${days}d:${hours}h:${minutes}m:${seconds}s`;
         }else{
             return ''
@@ -165,7 +198,7 @@ export default function LaunchList() {
                                         Launch Location:
                                     </Typography>
                                     <Typography variant='body1'>
-                                        {hoveredItem.vehicle.name}
+                                        {hoveredItem.pad.location.name}
                                     </Typography>
                                 </Stack>
                                 <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>

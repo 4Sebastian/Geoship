@@ -10,10 +10,6 @@ import Legend from '@/components/legend';
 export default function Home() {
 	const [address, setAddress] = useState(undefined)
 
-	useEffect(() => {
-		console.log(address)
-	}, [address])
-
 	return (
 		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
 			<Stack direction="column" justifyContent="space-between" sx={{ width: 1, height: 1, position: "relative", zIndex: 2 }}>
