@@ -3,7 +3,7 @@ import { Box, Grid, List, ListItem, ListItemText, Paper, Stack, Tooltip, Typogra
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
-export default function LaunchList(props:{setCoordinates: Function}) {
+export default function LaunchList(props:{setCoordinates: Function , setSelectedRocket: Function, setSelectedRocketIndex: Function}) {
     const [launches, setLaunches] = useState<any[]>([]);
     const [coordinates, setCoordinates] = useState<number[][]>();
     const [hoveredItem, setHoveredItem] = useState<any>(null);
@@ -11,6 +11,7 @@ export default function LaunchList(props:{setCoordinates: Function}) {
     const [ticking, setTicking] = useState(false),
         [count, setCount] = useState(0)
     const [estimatedDateString, setEstimatedDateString] = useState<string>("");
+    
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
@@ -93,6 +94,11 @@ export default function LaunchList(props:{setCoordinates: Function}) {
         }
     }
 
+    function handleClick(value: any, index: number){
+        props.setSelectedRocket(value)
+        props.setSelectedRocketIndex(index)
+    }
+
     useEffect(() => {
         if(estimatedDate != undefined){
             getTimeTillLaunch()
@@ -156,11 +162,12 @@ export default function LaunchList(props:{setCoordinates: Function}) {
                             <ListItemText primary={`Loading...`} />
                         </ListItem>
                         :
-                        launches.map((value) => (
+                        launches.map((value, index) => (
                             <ListItem
                                 key={value.id}
                                 onMouseEnter={() => handleHover(value)}
-                                onMouseLeave={() => handleHover(null)}>
+                                onMouseLeave={() => handleHover(null)}
+                                onMouseDown={() => handleClick(value, index)}>
                                 <ListItemText primary={`Rocket: ${value.vehicle.name}`} />
 
                             </ListItem>

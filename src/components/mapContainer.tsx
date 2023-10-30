@@ -20,7 +20,7 @@ import { StyleFunction } from 'ol/style/Style';
 import { Coordinate } from 'ol/coordinate';
 
 
-export default function MapContainer(props: { address: any , launches: any}) {
+export default function MapContainer(props: { address: any , launches: any, selectedRocketIndex: any}) {
     const raster = new TileLayer({
         source: new OSM(),
     });
@@ -76,13 +76,21 @@ export default function MapContainer(props: { address: any , launches: any}) {
                     var feat = new Feature({
                         geometry: new Circle(fromLonLat([props.launches[index][1], props.launches[index][0]]), 500),
                     })
-                    view.setCenter(fromLonLat([props.launches[index][1], props.launches[index][0]]))
+                    //view.setCenter(fromLonLat([props.launches[index][1], props.launches[index][0]]))
                     //setLaunchFeature(feat)
                     source.addFeature(feat);
                 }  
             }  
         } 
     }, [props.launches])
+
+    useEffect(() => {
+        console.log(props.selectedRocketIndex)
+        if(props.selectedRocketIndex){
+            view.setCenter(fromLonLat([props.launches[props.selectedRocketIndex][1], props.launches[props.selectedRocketIndex][0]]))
+            view.setZoom(20)
+        } 
+    }, [props.selectedRocketIndex])
 
     return (
         <Box sx={{ width: 1, height: 1 }}>
