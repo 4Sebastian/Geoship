@@ -20,6 +20,7 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
                 var rockets = []
                 var coordinates: number[][] = [];
                 var fixes: {index: number, location: string}[] = [];
+                var remove: number[] = []
                 console.log(response)
                 for (let index = 0; index < response.data.count; index++) {
                     await new Promise(res => setTimeout(res, 1000)).then(() => {
@@ -34,6 +35,9 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
                                     fixes.push({index: index, location: response.data.result[index].pad.location.name})
                                 }
                                 
+                            }).catch((err) => {
+                                console.log(err)
+                                fixes.push({index: index, location: response.data.result[index].pad.location.name})
                             })
                     });
                     rockets[index] = response.data.result[index]
@@ -52,13 +56,26 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
                                     console.log("Impossible")
                                 }
                                 
+                            }).catch((err)=>{
+                                console.log(err)
+                                console.log("Impossible")
+                                remove.push(index)
                             })
                     });
                 }
 
-                setLaunches(rockets);
-                setCoordinates(coordinates);
-                props.setCoordinates(coordinates);
+                var final_coordinates: number[][] = [];
+                var final_rockets = []
+                for (let index = 0; index < coordinates.length; index++){
+                    if (!remove.includes(index)){
+                        final_coordinates.push(coordinates[index])
+                        final_rockets.push(rockets[index])
+                    }
+                }
+
+                setLaunches(final_rockets);
+                setCoordinates(final_coordinates);
+                props.setCoordinates(final_coordinates);
             })
             .catch(function (error) {
                 console.log(error);
@@ -136,6 +153,10 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
             
 
             // console.log(new Date(difference))
+            if (difference <= 0){
+                setEstimatedDateString(`Right Now!`);
+                return 'Right Now!'
+            }
             setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
             //setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
             return `${days}d:${hours}h:${minutes}m:${seconds}s`;
