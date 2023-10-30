@@ -19,6 +19,7 @@ export default function LaunchList(props:{setCoordinates: Function}) {
                 var rockets = []
                 var coordinates: number[][] = [];
                 var fixes: {index: number, location: string}[] = [];
+                var remove: number[] = []
                 console.log(response)
                 for (let index = 0; index < response.data.count; index++) {
                     await new Promise(res => setTimeout(res, 1000)).then(() => {
@@ -33,6 +34,9 @@ export default function LaunchList(props:{setCoordinates: Function}) {
                                     fixes.push({index: index, location: response.data.result[index].pad.location.name})
                                 }
                                 
+                            }).catch((err) => {
+                                console.log(err)
+                                fixes.push({index: index, location: response.data.result[index].pad.location.name})
                             })
                     });
                     rockets[index] = response.data.result[index]
@@ -51,13 +55,24 @@ export default function LaunchList(props:{setCoordinates: Function}) {
                                     console.log("Impossible")
                                 }
                                 
+                            }).catch((err)=>{
+                                console.log(err)
+                                console.log("Impossible")
+                                remove.push(index)
                             })
                     });
                 }
 
+                var final_coordinates: number[][] = [];
+                for (let index = 0; index < coordinates.length; index++){
+                    if (!remove.includes(index)){
+                        final_coordinates.push(coordinates[index])
+                    }
+                }
+
                 setLaunches(rockets);
-                setCoordinates(coordinates);
-                props.setCoordinates(coordinates);
+                setCoordinates(final_coordinates);
+                props.setCoordinates(final_coordinates);
             })
             .catch(function (error) {
                 console.log(error);
@@ -130,6 +145,10 @@ export default function LaunchList(props:{setCoordinates: Function}) {
             
 
             // console.log(new Date(difference))
+            if (difference <= 0){
+                setEstimatedDateString(`Right Now!`);
+                return 'Right Now!'
+            }
             setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
             //setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
             return `${days}d:${hours}h:${minutes}m:${seconds}s`;
@@ -156,7 +175,7 @@ export default function LaunchList(props:{setCoordinates: Function}) {
                             <ListItemText primary={`Loading...`} />
                         </ListItem>
                         :
-                        launches.map((value) => (
+                        launches.map((value, index) => (
                             <ListItem
                                 key={value.id}
                                 onMouseEnter={() => handleHover(value)}
