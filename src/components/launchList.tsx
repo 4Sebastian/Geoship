@@ -64,13 +64,15 @@ export default function LaunchList(props:{setCoordinates: Function}) {
                 }
 
                 var final_coordinates: number[][] = [];
+                var final_rockets = []
                 for (let index = 0; index < coordinates.length; index++){
                     if (!remove.includes(index)){
                         final_coordinates.push(coordinates[index])
+                        final_rockets.push(rockets[index])
                     }
                 }
 
-                setLaunches(rockets);
+                setLaunches(final_rockets);
                 setCoordinates(final_coordinates);
                 props.setCoordinates(final_coordinates);
             })
