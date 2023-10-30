@@ -94,7 +94,7 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
 
     function getDate(est_date: any){
         var date = new Date(est_date.year, est_date.month-1, est_date.day)
-        console.log(est_date.year, est_date.month-1, est_date.day)
+        //console.log(est_date.year, est_date.month-1, est_date.day)
         //console.log(date);
 
         return date.toDateString()

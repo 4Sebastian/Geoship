@@ -86,9 +86,10 @@ export default function MapContainer(props: { address: any , launches: any, sele
 
     useEffect(() => {
         console.log(props.selectedRocketIndex)
-        if(props.selectedRocketIndex){
+        if(props.selectedRocketIndex != null){
+            console.log(props.launches[props.selectedRocketIndex])
             view.setCenter(fromLonLat([props.launches[props.selectedRocketIndex][1], props.launches[props.selectedRocketIndex][0]]))
-            view.setZoom(20)
+            view.setZoom(15)
         } 
     }, [props.selectedRocketIndex])
 
