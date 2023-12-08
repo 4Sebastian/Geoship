@@ -16,7 +16,7 @@ import { circular } from 'ol/geom/Polygon.js';
 import { getDistance } from 'ol/sphere.js';
 import { transform } from 'ol/proj.js';
 import RenderFeature from 'ol/render/Feature';
-import { StyleFunction } from 'ol/style/Style';
+import { StyleFunction, StyleLike } from 'ol/style/Style';
 import { Coordinate } from 'ol/coordinate';
 
 
@@ -32,17 +32,77 @@ export default function MapContainer(props: { address: any , launches: any, sele
     }));
     const [addressFeature, setAddressFeature] = useState<Feature>(new Feature());
     const [launchFeature, setLaunchFeature] = useState<Feature>(new Feature());
+
+    const circleStyleFunction = (circleColor: string) => {
+
+        return new Style({
+            fill: new Fill({
+                color: circleColor,
+            }),
+            stroke: new Stroke({
+                color: '#ffcc33',
+                width: 3,
+            }),
+            image: new CircleStyle({
+                radius: 15,
+                fill: new Fill({
+                    color: '#ffcc33',
+                }),
+            }),
+        });
+        // Default style if radius doesn't match any condition
+        return new Style({
+            // Default style properties
+        });
+    };
+
+
+    const circleGradientStyleFunction = (opacity: number) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const context = canvas.getContext('2d');
+    
+        if (context) {
+            const gradient = context.createRadialGradient(16, 16, 0, 16, 16, 16);
+            gradient.addColorStop(0, 'yellow');
+            gradient.addColorStop(1, 'red');
+    
+            context.arc(16, 16, 15, 0, 2 * Math.PI);
+            context.fillStyle = gradient;
+            context.globalAlpha = opacity;
+            context.fill();
+    
+            return new Style({
+                image: new CircleStyle({
+                    radius: 15,
+                    fill: new Fill({
+                        color: context.createPattern(canvas, 'no-repeat'),
+                    }),
+                    stroke: new Stroke({
+                        color: '#ffcc33',
+                        width: 3,
+                    }),
+                }),
+            });
+        } else {
+            return new Style(); // Return default empty style if canvas context is not available
+        }
+    };
     const vector = new VectorLayer({
         source: source,
-        style: {
-            'fill-color': 'rgba(255, 255, 255, 0.2)',
-            'stroke-color': '#ffcc33',
-            'stroke-width': 3,
-            'circle-radius': 15,
-            'circle-fill-color': '#ffcc33',
-        }
+        
+        // {
+        //     'fill-color': 'rgba(255, 0, 0, 0.2)',
+        //     'stroke-color': '#ffcc33',
+        //     'stroke-width': 3,
+        //     'circle-radius': 15,
+        //     'circle-fill-color': '#ffcc33',
+        // }
+
     });
 
+    
     useEffect(() => {
         new Map({
             controls: [],
@@ -74,11 +134,22 @@ export default function MapContainer(props: { address: any , launches: any, sele
                     console.log(fromLonLat([props.launches[index][1], props.launches[index][0]]))
                     //source.removeFeature(launchFeature)
                     var feat = new Feature({
-                        geometry: new Circle(fromLonLat([props.launches[index][1], props.launches[index][0]]), 500),
+                        geometry: new Circle(fromLonLat([props.launches[index][1], props.launches[index][0]]), 50000),
+                    })
+                    var feat2 = new Feature({
+                        geometry: new Circle(fromLonLat([props.launches[index][1], props.launches[index][0]]), 100000),
+                    })
+                    var feat3 = new Feature({
+                        geometry: new Circle(fromLonLat([props.launches[index][1], props.launches[index][0]]), 150000),
                     })
                     //view.setCenter(fromLonLat([props.launches[index][1], props.launches[index][0]]))
                     //setLaunchFeature(feat)
+                    feat.setStyle(circleStyleFunction('rgba(255, 0, 0, 0.15)'));
+                    feat2.setStyle(circleStyleFunction('rgba(255, 165, 0, 0.15)'));
+                    feat3.setStyle(circleStyleFunction('rgba(255, 255, 0, 0.15)'));
                     source.addFeature(feat);
+                    source.addFeature(feat2);
+                    source.addFeature(feat3);
                 }  
             }  
         } 
@@ -89,7 +160,7 @@ export default function MapContainer(props: { address: any , launches: any, sele
         if(props.selectedRocketIndex != null){
             console.log(props.launches[props.selectedRocketIndex])
             view.setCenter(fromLonLat([props.launches[props.selectedRocketIndex][1], props.launches[props.selectedRocketIndex][0]]))
-            view.setZoom(15)
+            view.setZoom(10)
         } 
     }, [props.selectedRocketIndex])
 
