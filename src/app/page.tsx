@@ -1,10 +1,10 @@
 'use client';
 import { Box, Stack } from '@mui/material'
 
-import React, { useEffect, useState } from "react";
-import MapContainer from '@/components/mapContainer';
+import React, { useState } from "react";
+import MapContainer from '@/components/openlayers/mapContainer';
 import Address from '@/components/address';
-import LaunchList from '@/components/launchList';
+import LaunchList from '@/components/LaunchList/launchList';
 import RocketInfo from '@/components/rocketInfo';
 
 export default function Home() {
@@ -12,14 +12,6 @@ export default function Home() {
 	const [coordinates, setCoordinates] = useState(undefined)
 	const [selectedRocket, setSelectedRocket] = useState<any>(null);
 	const [selectedRocketIndex, setSelectedRocketIndex] = useState<any>(null);
-
-	useEffect(() => {
-		console.log(address)
-	}, [address])
-
-	useEffect(() => {
-		console.log(coordinates)
-	}, [coordinates])
 
 	return (
 		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>

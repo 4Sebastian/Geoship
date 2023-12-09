@@ -22,9 +22,7 @@ export default function Address(props:{setAddress: Function}) {
 
     function validAddresses() {
         if (addressSuggestions.length == 0) { return false; }//If suggestion list empty, don't show
-
         if (address == "") { return false; }//If address input is empty
-            
         for (const element of addressSuggestions) { //If the current address is a suggestion, don't show
             if (element.properties.formatted == address) { return false; }
         }
@@ -34,7 +32,6 @@ export default function Address(props:{setAddress: Function}) {
     function handleAddress(value: any){
         setAddress(value.properties.formatted)
         props.setAddress(value)
-        console.log(value)
     }
 
     return (
