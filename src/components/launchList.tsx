@@ -3,8 +3,7 @@ import { Box, Grid, List, ListItem, ListItemText, Paper, Stack, Tooltip, Typogra
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
-export default function LaunchList(props:{setCoordinates: Function , setSelectedRocket: Function, setSelectedRocketIndex: Function}) {
-    const [launches, setLaunches] = useState<any[]>([]);
+export default function LaunchList(props:{setCoordinates: Function , setSelectedRocket: Function, setSelectedRocketIndex: Function, setLaunches : Function, launches: any}) {
     const [coordinates, setCoordinates] = useState<number[][]>();
     const [hoveredItem, setHoveredItem] = useState<any>(null);
     const [estimatedDate, setEstimatedDate] = useState<any>(undefined);
@@ -73,7 +72,7 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
                     }
                 }
 
-                setLaunches(final_rockets);
+                props.setLaunches(final_rockets);
                 setCoordinates(final_coordinates);
                 props.setCoordinates(final_coordinates);
             })
@@ -178,12 +177,12 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
 
 
                 <List>
-                    {launches.length == 0 ?
+                    {props.launches.length == 0 ?
                         <ListItem key="loading">
                             <ListItemText primary={`Loading...`} />
                         </ListItem>
                         :
-                        launches.map((value, index) => (
+                        props.launches.map((value: { id: React.Key | null | undefined; vehicle: { name: any; }; }, index: number) => (
                             <ListItem
                                 key={value.id}
                                 onMouseEnter={() => handleHover(value)}
@@ -253,15 +252,7 @@ export default function LaunchList(props:{setCoordinates: Function , setSelected
 
 
                             </Stack>
-
-
                         </Stack>
-
-
-
-
-
-
                     </Paper>
                 )
             }
