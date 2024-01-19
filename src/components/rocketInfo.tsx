@@ -5,61 +5,6 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 
 export default function RocketInfo(props: { selectedRocket: any, address: any , setDistance: Function}) {
-    
-
-    async function calculateDistance(){
-        var location = encodeURI(props.selectedRocket.pad.name);
-        
-        var coordinates2: number[] = [];
-        var coordinates1 = await axios.get(`https://geocode.maps.co/search?q={${location}}`)
-            .then((response) =>{
-                var coordinates1: number[] = [];
-                coordinates1 = [parseFloat(response.data[0].lat), parseFloat(response.data[0].lon)]
-                // coordinates[0] = parseFloat(response.data[0].lon);
-                // coordinates[1] = parseFloat(response.data[0].lat);
-                // console.log(coordinates[0])
-                
-                
-                
-
-                return coordinates1;
-            })
-
-        coordinates2[1] = props.address.geometry.coordinates[0]
-        coordinates2[0] = props.address.geometry.coordinates[1]
-        console.log(coordinates1[0])
-        console.log(coordinates1[1])
-        console.log(coordinates2[0])
-        console.log(coordinates2[1])
-        props.setDistance(getDistanceFromLatLonInMi(coordinates1[0],coordinates1[1],coordinates2[0],coordinates2[1]))
-    }
-
-    function getDistanceFromLatLonInMi(lat1: number,lon1: number,lat2: number,lon2: number) {
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2-lat1);  // deg2rad below
-        var dLon = deg2rad(lon2-lon1); 
-        var a = 
-          Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-          Math.sin(dLon/2) * Math.sin(dLon/2)
-          ; 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        var d = R * c; // Distance in km
-        return d* 0.621371;
-      }
-      
-      function deg2rad(deg: number) {
-        return deg * (Math.PI/180)
-      }
-
-    useEffect(() => {
-       
-        if(props.address && props.selectedRocket){
-            calculateDistance()
-        }
-    
-    }, [props.selectedRocket, props.address])
-
     return (
         
         <Paper elevation={10} sx={{ padding: 1 }}>

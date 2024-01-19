@@ -12,7 +12,6 @@ export default function Address(props:{setAddress: Function}) {
         if (address != "") {
             axios.get(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=6996746ace5b4605a490e1625c60f468`)
                 .then(function (response) {
-                    console.log(response)
                     setAddressSuggesstions(response.data.features)
                 }).catch((err) => {
                     console.log(err)
@@ -34,7 +33,6 @@ export default function Address(props:{setAddress: Function}) {
     function handleAddress(value: any){
         setAddress(value.properties.formatted)
         props.setAddress(value)
-        console.log(value)
     }
 
     return (

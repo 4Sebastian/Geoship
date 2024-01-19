@@ -13,17 +13,9 @@ export default function Home() {
 	const [address, setAddress] = useState(undefined)
 	const [coordinates, setCoordinates] = useState<Coordinate[]>()
 	const [selectedRocket, setSelectedRocket] = useState<any>(null);
-	const [selectedRocketIndex, setSelectedRocketIndex] = useState<any>(null);
+	const [selectedRocketIndex, setSelectedRocketIndex] = useState<number>();
 	const [launches, setLaunches] = useState<any[]>([]);
 	const [distance, setDistance] = useState(Number);
-
-	useEffect(() => {
-		console.log(address)
-	}, [address])
-
-	useEffect(() => {
-		console.log(coordinates)
-	}, [coordinates])
 
 	return (
 		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
@@ -33,12 +25,12 @@ export default function Home() {
 					<Address setAddress={setAddress}/>
 				</Stack>
 				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>				
-					<Distance launches = {launches} coordinates={coordinates} selectedRocket={selectedRocket} address={address}/>
+					<Distance launches = {launches} coordinates={coordinates} selectedRocket = {selectedRocket}selectedRocketIndex={selectedRocketIndex} address={address}/>
 					<RocketInfo selectedRocket = {selectedRocket} address = {address} setDistance = {setDistance}/>
 				</Stack>
 			</Stack>
 			<Box sx={{ position: "absolute", top: 0, right: 0, width: 1, height: 1, zIndex: 1, pointerEvents: "auto" }}>
-				<MapContainer address={address} launches={coordinates} selectedRocketIndex = {selectedRocketIndex} />
+				<MapContainer address={address} coordinates={coordinates} selectedRocketIndex = {selectedRocketIndex} />
 			</Box>
 		</Box>
 	)
