@@ -1,7 +1,6 @@
 import { Box, Grid, List, ListItem, ListItemText, Paper, Stack, Tooltip, Typography } from '@mui/material'
 
 import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from 'axios';
 
 export default function LaunchList(props: { setCoordinates: Function, setSelectedRocket: Function, setSelectedRocketIndex: Function, setLaunches: Function, launches: any }) {
     const [hoveredItem, setHoveredItem] = useState<any>(null);
@@ -12,20 +11,22 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
-    function handle_rockets(response: AxiosResponse){
+    async function handle_rockets(response: Response){
         var rockets: any[] = []
         var coords: number[][] = [];
-        var promises: Promise<AxiosResponse>[] = []
-        for (let index = 0; index < response.data.count; index++) {
-            var padId = response.data.result[index].pad.id
-            var promise = axios.get(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
+        var promises: Promise<Response>[] = []
+        var body = await response.json();
+        for (let index = 0; index < body.count; index++) {
+            var padId = body.result[index].pad.id
+            var promise = fetch(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
             promises.push(promise)
         }
-        Promise.all(promises).then((values) => {
+        Promise.all(promises).then(async (values) => {
             for (let index = 0; index < values.length; index++) {
-                if (!(response.data.result[index].vehicle.name == "TBD" || values[index].data.result[0].location.longitude == "")) {
-                    coords.push([parseFloat(values[index].data.result[0].location.latitude), parseFloat(values[index].data.result[0].location.longitude)])
-                    rockets.push(response.data.result[index])
+                var valueBody = await values[index].json()
+                if (!(body.result[index].vehicle.name == "TBD" || valueBody.result[0].location.longitude == "")) {
+                    coords.push([parseFloat(valueBody.result[0].location.latitude), parseFloat(valueBody.result[0].location.longitude)])
+                    rockets.push(body.result[index])
                 }
             }
 
@@ -36,7 +37,7 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     }
 
     useEffect(() => {
-        axios.get(`https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
+        fetch(`https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
             .then(handle_rockets)
             .catch(function (error) {
                 console.log(error)

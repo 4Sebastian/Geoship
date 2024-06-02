@@ -2,7 +2,6 @@ import { Box, Paper, Stack, Typography } from '@mui/material'
 
 import StarIcon from '@mui/icons-material/Star'
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 
 export default function RocketInfo(props: { selectedRocket: any, address: any , setDistance: Function}) {
     return (

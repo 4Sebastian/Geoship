@@ -1,7 +1,6 @@
 import { Box, Grid, List, ListItem, ListItemText, Paper, Stack, TextField, Tooltip, Typography } from '@mui/material'
 
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
 import {getLength} from 'ol/sphere';

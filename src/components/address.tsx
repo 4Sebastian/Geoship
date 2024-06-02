@@ -2,7 +2,6 @@
 import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '@mui/material'
 
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 
 export default function Address(props:{setAddress: Function}) {
     const [address, setAddress] = useState("");
@@ -10,9 +9,9 @@ export default function Address(props:{setAddress: Function}) {
 
     useEffect(() => {
         if (address != "") {
-            axios.get(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=6996746ace5b4605a490e1625c60f468`)
-                .then(function (response) {
-                    setAddressSuggesstions(response.data.features)
+            fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=6996746ace5b4605a490e1625c60f468`)
+                .then(async function (response: Response) {
+                    setAddressSuggesstions((await response.json()).features)
                 }).catch((err) => {
                     console.log(err)
                 })
