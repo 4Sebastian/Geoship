@@ -11,6 +11,10 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     const [estimatedDateString, setEstimatedDateString] = useState<string>("");
 
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+    const [images, setImages] = useState<{ [key: string]: string }>({});
+
+    const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
 
     function handle_rockets(response: AxiosResponse){
         var rockets: any[] = []
@@ -31,6 +35,7 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
             props.setLaunches(rockets)
             props.setCoordinates(coords)
+            fetchAllImages(rockets)
         });
 
     }
@@ -60,13 +65,13 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     }
 
     function handleHover(value: any) {
-        setHoveredItem(value)
+        setHoveredItem(value);
         if (value) {
-            setEstimatedDate(value.t0)
-            setTicking(true)
+            setEstimatedDate(value.t0);
+            setTicking(true);
         } else {
-            setEstimatedDate(undefined)
-            setTicking(false)
+            setEstimatedDate(undefined);
+            setTicking(false);
         }
     }
 
@@ -125,7 +130,40 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
     }
 
-    return (
+    async function fetchImage(query: string) {
+        try {
+            const response = await axios.get(`https://www.googleapis.com/customsearch/v1`, {
+                params: {
+                    key: GOOGLE_API_KEY,
+                    cx: GOOGLE_CX,
+                    q: query,
+                    searchType: 'image',
+                    num: 1
+                }
+            });
+
+            if (response.data.items && response.data.items.length > 0) {
+                return response.data.items[0].link;
+            } else {
+                return 'https://via.placeholder.com/150';
+            }
+        } catch (error) {
+            console.error('Error fetching image:', error);
+            return 'https://via.placeholder.com/150'; 
+        }
+    }
+
+    async function fetchAllImages(rockets: any[]) {
+        const imagePromises = rockets.map((rocket) => fetchImage(rocket.vehicle.name + "-rocket"));
+        const images = await Promise.all(imagePromises);
+        const imageMap: { [key: string]: string } = {};
+        rockets.forEach((rocket, index) => {
+            imageMap[rocket.vehicle.name] = images[index];
+        });
+        setImages(imageMap);
+    }
+
+    return ( 
         <Paper elevation={10} sx={{ height: "400px", pointerEvents: "auto", overflowY: "auto" }}>
             <Stack direction="column">
                 <Paper elevation={2} sx={{ padding: 1 }}>
@@ -165,7 +203,8 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
                     }}>
                         <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
                             <Box component="img" sx={{ objectFit: 'cover', aspectRatio: 1 }}
-                                src={`${'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e'}`}
+                                src={images[hoveredItem.vehicle.name] || 'https://via.placeholder.com/150'}
+                                alt={hoveredItem.vehicle.name}
                                 loading="lazy"
                             >
 
@@ -204,12 +243,6 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
                                         {estimatedDateString}
                                     </Typography>
                                 </Stack>
-
-
-
-
-
-
                             </Stack>
                         </Stack>
                     </Paper>
