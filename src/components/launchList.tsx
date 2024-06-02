@@ -133,18 +133,11 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
     async function fetchImage(query: string) {
         try {
-            const response = await axios.get(`https://www.googleapis.com/customsearch/v1`, {
-                params: {
-                    key: GOOGLE_API_KEY,
-                    cx: GOOGLE_CX,
-                    q: query,
-                    searchType: 'image',
-                    num: 1
-                }
-            });
-
-            if (response.data.items && response.data.items.length > 0) {
-                return response.data.items[0].link;
+            const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CX}&q=${query}&searchType=image&num=1`);
+            const data = await response.json();
+    
+            if (data.items && data.items.length > 0) {
+                return data.items[0].link;
             } else {
                 return 'https://via.placeholder.com/150';
             }
