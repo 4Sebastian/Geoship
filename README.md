@@ -2,6 +2,17 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+### Environment Variables
+
+Create a .env.local file in the geoship directory and fill in the appropriate contents: 
+
+```text
+ROCKET_TOKEN="Enter_Token_Here"
+GEOAPIFY_API_KEY="Enter_API_Key_Here"
+```
+
+### Instructions
+
 First, run the development server:
 
 ```bash
