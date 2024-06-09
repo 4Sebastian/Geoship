@@ -1,6 +1,7 @@
 import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material'
 
 import React, { useState, useEffect } from "react";
+import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 
 export default function LaunchList(props: { setCoordinates: Function, setSelectedRocket: Function, setSelectedRocketIndex: Function, setLaunches: Function, launches: any }) {
     const [hoveredItem, setHoveredItem] = useState<any>(null);
@@ -15,38 +16,12 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
     const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
 
-    async function handle_rockets(response: Response){
-        var rockets: any[] = []
-        var coords: number[][] = [];
-        var promises: Promise<Response>[] = []
-        var body = await response.json();
-        for (let index = 0; index < body.count; index++) {
-            var padId = body.result[index].pad.id
-            var promise = fetch(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
-            promises.push(promise)
-        }
-        Promise.all(promises).then(async (values) => {
-            for (let index = 0; index < values.length; index++) {
-                var valueBody = await values[index].json()
-                if (!(body.result[index].vehicle.name == "TBD" || valueBody.result[0].location.longitude == "")) {
-                    coords.push([parseFloat(valueBody.result[0].location.latitude), parseFloat(valueBody.result[0].location.longitude)])
-                    rockets.push(body.result[index])
-                }
-            }
-
-            props.setLaunches(rockets)
-            props.setCoordinates(coords)
-            fetchAllImages(rockets)
-        });
-
-    }
-
     useEffect(() => {
-        fetch(`https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
-            .then(handle_rockets)
-            .catch(function (error) {
-                console.log(error)
-            })
+        getAllLaunchesAndCoordinates().then(res => {
+            props.setLaunches(res.rockets);
+            props.setCoordinates(res.coords);
+            fetchAllImages(res.rockets);
+        }).catch(error => console.log(error));
 
         const handleMouseMove = (e: { clientX: any; clientY: any; }) => {
             setCursorPosition({ x: e.clientX, y: e.clientY });
