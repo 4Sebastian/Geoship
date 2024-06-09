@@ -16,22 +16,16 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
     const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
 
+    function handleMouseMove(e: { clientX: any; clientY: any; }) {
+        setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
     useEffect(() => {
         getAllLaunchesAndCoordinates().then(res => {
             props.setLaunches(res.rockets);
             props.setCoordinates(res.coords);
             fetchAllImages(res.rockets);
         }).catch(error => console.log(error));
-
-        const handleMouseMove = (e: { clientX: any; clientY: any; }) => {
-            setCursorPosition({ x: e.clientX, y: e.clientY });
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-        };
     }, []);
 
     function getDate(est_date: any) {
@@ -151,6 +145,7 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
                         props.launches.map((value: { id: React.Key | null | undefined; vehicle: { name: any; }; }, index: number) => (
                             <ListItem
                                 key={index}
+                                onMouseMove={handleMouseMove}
                                 onMouseEnter={() => handleHover(value)}
                                 onMouseLeave={() => handleHover(null)}
                                 onMouseDown={() => handleClick(value, index)}>
