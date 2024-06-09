@@ -3,20 +3,14 @@ import { Box } from '@mui/material'
 
 import React, { useState, useEffect } from "react";
 import { Feature } from 'ol';
-import { Circle, Geometry } from 'ol/geom';
+import { Circle } from 'ol/geom';
 import { fromLonLat } from 'ol/proj';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style.js';
-import { Draw, Modify, Snap } from 'ol/interaction.js';
-import { GeometryCollection, Point, Polygon } from 'ol/geom.js';
+import { Style } from 'ol/style.js';
+import { Point } from 'ol/geom.js';
 import { OSM, Vector as VectorSource } from 'ol/source.js';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
-import { circular } from 'ol/geom/Polygon.js';
-import { getDistance } from 'ol/sphere.js';
-import { transform } from 'ol/proj.js';
-import RenderFeature from 'ol/render/Feature';
-import { StyleFunction, StyleLike } from 'ol/style/Style';
 import { Coordinate } from 'ol/coordinate';
 
 
@@ -31,7 +25,6 @@ export default function MapContainer(props: { address: any, coordinates: any, se
     zoom: 20,
   }));
   const [addressFeature, setAddressFeature] = useState<Feature>(new Feature());
-  const [launchFeature, setLaunchFeature] = useState<Feature>(new Feature());
 
   const vector = new VectorLayer({
     source: source,

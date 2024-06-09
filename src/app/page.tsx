@@ -1,7 +1,7 @@
 'use client';
 import { Box, Stack } from '@mui/material'
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import MapContainer from '@/components/mapContainer';
 import Address from '@/components/address';
 import LaunchList from '@/components/launchList';
@@ -15,7 +15,6 @@ export default function Home() {
 	const [selectedRocket, setSelectedRocket] = useState<any>(null);
 	const [selectedRocketIndex, setSelectedRocketIndex] = useState<number>();
 	const [launches, setLaunches] = useState<any[]>([]);
-	const [distance, setDistance] = useState(Number);
 
 	return (
 		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
