@@ -30,15 +30,12 @@ export default function MapContainer(props: { address: any, coordinates: any, se
     source: source,
   });
 
-
-  useEffect(() => {
-    new Map({
-      controls: [],
-      layers: [raster, vector],
-      target: 'map',
-      view: view,
-    });
-  }, [])
+  var map = new Map({
+    controls: [],
+    layers: [raster, vector],
+    target: 'map',
+    view: view,
+  });
 
   useEffect(() => {
     if (props.address) {
