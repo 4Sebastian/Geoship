@@ -1,4 +1,10 @@
 ![GeoShipBanner.jpg](public/GeoShipBanner.jpg)
+## Deployments
+
+### [Live/Production](https://geoship-a16bd.web.app)
+
+### [Staging](https://geoship-a16bd--staging-zfhhphfs.web.app)
+
 ## Getting Started
 
 ### Environment Variables
