@@ -26,7 +26,7 @@ export default function Home() {
 				</Stack>
 				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>				
 					<Distance launches = {launches} coordinates={coordinates} selectedRocket = {selectedRocket}selectedRocketIndex={selectedRocketIndex} address={address}/>
-					<RocketInfo selectedRocket = {selectedRocket} address = {address} setDistance = {setDistance}/>
+					<RocketInfo selectedRocket = {selectedRocket} address = {address}/>
 				</Stack>
 			</Stack>
 			<Box sx={{ position: "absolute", top: 0, right: 0, width: 1, height: 1, zIndex: 1, pointerEvents: "auto" }}>
