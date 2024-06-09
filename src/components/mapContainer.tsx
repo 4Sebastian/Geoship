@@ -30,12 +30,15 @@ export default function MapContainer(props: { address: any, coordinates: any, se
     source: source,
   });
 
-  var map = new Map({
-    controls: [],
-    layers: [raster, vector],
-    target: 'map',
-    view: view,
-  });
+  //Note, this Map must be created on the client side because it is dependent on document, which is client-side only
+  useEffect(() => {
+    new Map({
+      controls: [],
+      layers: [raster, vector],
+      target: 'map',
+      view: view,
+    });
+  }, []);
 
   useEffect(() => {
     if (props.address) {
