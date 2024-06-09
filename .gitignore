@@ -19,6 +19,8 @@
 .DS_Store
 *.pem
 .vscode
+.idea
+dependency_tree.txt
 
 # debug
 npm-debug.log*
@@ -37,3 +39,5 @@ next-env.d.ts
 
 # Firestore
 firebase/
+/.firebase/
+firebase-debug.log
