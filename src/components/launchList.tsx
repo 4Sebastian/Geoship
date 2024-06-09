@@ -2,13 +2,12 @@ import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mu
 
 import React, { useState, useEffect } from "react";
 import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
+import LaunchListHoverItem from "@/components/launchListHoverItem";
 
 export default function LaunchList(props: { setCoordinates: Function, setSelectedRocket: Function, setSelectedRocketIndex: Function, setLaunches: Function, launches: any }) {
     const [hoveredItem, setHoveredItem] = useState<any>(null);
     const [estimatedDate, setEstimatedDate] = useState<any>(undefined);
-    const [ticking, setTicking] = useState(false),
-        [count, setCount] = useState(0)
-    const [estimatedDateString, setEstimatedDateString] = useState<string>("");
+    const [ticking, setTicking] = useState(false);
 
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [images, setImages] = useState<{ [key: string]: string }>({});
@@ -26,12 +25,6 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
         fetchAllImages(res.rockets);
     }).catch(error => console.log(error));
 
-    function getDate(est_date: any) {
-        var date = new Date(est_date.year, est_date.month - 1, est_date.day)
-
-        return date.toDateString()
-    }
-
     function handleHover(value: any) {
         setHoveredItem(value);
         if (value) {
@@ -46,56 +39,6 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     function handleClick(value: any, index: number) {
         props.setSelectedRocket(value)
         props.setSelectedRocketIndex(index)
-    }
-
-    useEffect(() => {
-        if (estimatedDate != undefined) {
-            getTimeTillLaunch()
-        }
-    }, [estimatedDate])
-
-
-
-    useEffect(() => {
-        const timer = setTimeout(() => ticking && setCount(count + 1), 1e3)
-        getTimeTillLaunch();
-        return () => clearTimeout(timer)
-    }, [count, ticking])
-
-
-    function getTimeTillLaunch() {
-
-        if (estimatedDate != undefined) {
-            //"2023-10-26T03:14Z"
-            var date = new Date(estimatedDate)
-            var today = new Date(Date.now());
-
-            var difference = date.getTime() - today.getTime();
-            //var diffDate = new Date(difference)
-
-            var seconds = Math.floor(difference / 1000);
-            var minutes = Math.floor(seconds / 60);
-            var hours = Math.floor(minutes / 60);
-            var days = Math.floor(hours / 24);
-
-            hours %= 24;
-            minutes %= 60;
-            seconds %= 60;
-
-
-
-            if (difference <= 0) {
-                setEstimatedDateString(`Right Now!`);
-                return 'Right Now!'
-            }
-            setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
-            //setEstimatedDateString(`${days}d:${hours}h:${minutes}m:${seconds}s`);
-            return `${days}d:${hours}h:${minutes}m:${seconds}s`;
-        } else {
-            return ''
-        }
-
-
     }
 
     async function fetchImage(query: string) {
@@ -154,62 +97,7 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
                 </List>
             </Stack>
 
-            {
-                hoveredItem && (
-                    <Paper elevation={5} sx={{
-                        position: 'fixed',
-                        top: cursorPosition.y + 10 + 'px',
-                        left: cursorPosition.x + 10 + 'px',
-                        width: 'max-content',
-                        height: 0.175
-                    }}>
-                        <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
-                            <Box component="img" sx={{ objectFit: 'cover', aspectRatio: 1 }}
-                                src={images[hoveredItem.vehicle.name] || 'https://via.placeholder.com/150'}
-                                alt={hoveredItem.vehicle.name}
-                                loading="lazy"
-                            >
-
-                            </Box>
-
-                            <Stack direction="column" justifyContent="space-between">
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                                    <Typography variant='h5'>
-                                        rocket name:
-                                    </Typography>
-                                    <Typography variant='h5'>
-                                        {hoveredItem.vehicle.name}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                                    <Typography variant='body1'>
-                                        Launch Location:
-                                    </Typography>
-                                    <Typography variant='body1'>
-                                        {hoveredItem.pad.location.name}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                                    <Typography variant='body1'>
-                                        Launch date:
-                                    </Typography>
-                                    <Typography variant='body1'>
-                                        {getDate(hoveredItem.est_date)}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                                    <Typography variant='body1'>
-                                        Time until launch:
-                                    </Typography>
-                                    <Typography variant='body1'>
-                                        {estimatedDateString}
-                                    </Typography>
-                                </Stack>
-                            </Stack>
-                        </Stack>
-                    </Paper>
-                )
-            }
+            <LaunchListHoverItem  cursorPosition={cursorPosition} estimatedDate={estimatedDate} hoveredItem={hoveredItem} images={images} ticking={ticking}/>
         </Paper >
     )
 }
