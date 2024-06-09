@@ -6,8 +6,7 @@
 Create a .env.local file in the geoship directory and fill in the appropriate contents: 
 
 ```text
-ROCKET_TOKEN="Enter_Token_Here"
-GEOAPIFY_API_KEY="Enter_API_Key_Here"
+NEXT_PUBLIC_ROCKET_TOKEN="Enter_Token_Here"
 ```
 
 ### Instructions
