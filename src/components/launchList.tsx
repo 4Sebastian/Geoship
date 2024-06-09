@@ -1,7 +1,6 @@
-import { Box, Grid, List, ListItem, ListItemText, Paper, Stack, Tooltip, Typography } from '@mui/material'
+import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material'
 
 import React, { useState, useEffect } from "react";
-import axios, { AxiosResponse } from 'axios';
 
 export default function LaunchList(props: { setCoordinates: Function, setSelectedRocket: Function, setSelectedRocketIndex: Function, setLaunches: Function, launches: any }) {
     const [hoveredItem, setHoveredItem] = useState<any>(null);
@@ -11,32 +10,39 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     const [estimatedDateString, setEstimatedDateString] = useState<string>("");
 
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+    const [images, setImages] = useState<{ [key: string]: string }>({});
 
-    function handle_rockets(response: AxiosResponse){
+    const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
+
+    async function handle_rockets(response: Response){
         var rockets: any[] = []
         var coords: number[][] = [];
-        var promises: Promise<AxiosResponse>[] = []
-        for (let index = 0; index < response.data.count; index++) {
-            var padId = response.data.result[index].pad.id
-            var promise = axios.get(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
+        var promises: Promise<Response>[] = []
+        var body = await response.json();
+        for (let index = 0; index < body.count; index++) {
+            var padId = body.result[index].pad.id
+            var promise = fetch(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
             promises.push(promise)
         }
-        Promise.all(promises).then((values) => {
+        Promise.all(promises).then(async (values) => {
             for (let index = 0; index < values.length; index++) {
-                if (!(response.data.result[index].vehicle.name == "TBD" || values[index].data.result[0].location.longitude == "")) {
-                    coords.push([parseFloat(values[index].data.result[0].location.latitude), parseFloat(values[index].data.result[0].location.longitude)])
-                    rockets.push(response.data.result[index])
+                var valueBody = await values[index].json()
+                if (!(body.result[index].vehicle.name == "TBD" || valueBody.result[0].location.longitude == "")) {
+                    coords.push([parseFloat(valueBody.result[0].location.latitude), parseFloat(valueBody.result[0].location.longitude)])
+                    rockets.push(body.result[index])
                 }
             }
 
             props.setLaunches(rockets)
             props.setCoordinates(coords)
+            fetchAllImages(rockets)
         });
 
     }
 
     useEffect(() => {
-        axios.get(`https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
+        fetch(`https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`)
             .then(handle_rockets)
             .catch(function (error) {
                 console.log(error)
@@ -60,13 +66,13 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     }
 
     function handleHover(value: any) {
-        setHoveredItem(value)
+        setHoveredItem(value);
         if (value) {
-            setEstimatedDate(value.t0)
-            setTicking(true)
+            setEstimatedDate(value.t0);
+            setTicking(true);
         } else {
-            setEstimatedDate(undefined)
-            setTicking(false)
+            setEstimatedDate(undefined);
+            setTicking(false);
         }
     }
 
@@ -125,7 +131,33 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
     }
 
-    return (
+    async function fetchImage(query: string) {
+        try {
+            const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CX}&q=${query}&searchType=image&num=1`);
+            const data = await response.json();
+    
+            if (data.items && data.items.length > 0) {
+                return data.items[0].link;
+            } else {
+                return 'https://via.placeholder.com/150';
+            }
+        } catch (error) {
+            console.error('Error fetching image:', error);
+            return 'https://via.placeholder.com/150'; 
+        }
+    }
+
+    async function fetchAllImages(rockets: any[]) {
+        const imagePromises = rockets.map((rocket) => fetchImage(rocket.vehicle.name + "-rocket"));
+        const images = await Promise.all(imagePromises);
+        const imageMap: { [key: string]: string } = {};
+        rockets.forEach((rocket, index) => {
+            imageMap[rocket.vehicle.name] = images[index];
+        });
+        setImages(imageMap);
+    }
+
+    return ( 
         <Paper elevation={10} sx={{ height: "400px", pointerEvents: "auto", overflowY: "auto" }}>
             <Stack direction="column">
                 <Paper elevation={2} sx={{ padding: 1 }}>
@@ -165,7 +197,8 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
                     }}>
                         <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
                             <Box component="img" sx={{ objectFit: 'cover', aspectRatio: 1 }}
-                                src={`${'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e'}`}
+                                src={images[hoveredItem.vehicle.name] || 'https://via.placeholder.com/150'}
+                                alt={hoveredItem.vehicle.name}
                                 loading="lazy"
                             >
 
@@ -204,12 +237,6 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
                                         {estimatedDateString}
                                     </Typography>
                                 </Stack>
-
-
-
-
-
-
                             </Stack>
                         </Stack>
                     </Paper>

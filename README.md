@@ -1,6 +1,21 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+![GeoShipBanner.jpg](public/GeoShipBanner.jpg)
+## Deployments
+
+### [Live/Production](https://geoship-a16bd.web.app)
+
+### [Staging](https://geoship-a16bd--staging-zfhhphfs.web.app)
 
 ## Getting Started
+
+### Environment Variables
+
+Create a .env.local file in the geoship directory and fill in the appropriate contents: 
+
+```text
+NEXT_PUBLIC_ROCKET_TOKEN="Enter_Token_Here"
+```
+
+### Instructions
 
 First, run the development server:
 
