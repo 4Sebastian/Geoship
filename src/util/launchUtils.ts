@@ -19,7 +19,7 @@ export async function compileAllLaunchesAndCoordinates(launchDetails: Response[]
             rockets.push(body.result[index])
         }
     }
-    console.log(rockets);
+    //console.log(rockets);
     return {rockets: rockets, coords: coords};
 }
 

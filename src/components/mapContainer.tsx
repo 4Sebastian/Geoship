@@ -55,11 +55,11 @@ export default function MapContainer(props: { address: any, coordinates: any, se
 
   useEffect(() => {
     if (props.coordinates) {
-      console.log(props.coordinates);
+      //console.log(props.coordinates);
       for (let index = 0; index < props.coordinates.length; index++) {
         if (props.coordinates[index] && props.coordinates[index].length >= 2) {
-          console.log(index);
-          console.log(fromLonLat([props.coordinates[index][1], props.coordinates[index][0]]))
+          //console.log(index);
+          //console.log(fromLonLat([props.coordinates[index][1], props.coordinates[index][0]]))
 
           const circleFeature = new Feature({
             geometry: new Circle(fromLonLat([props.coordinates[index][1], props.coordinates[index][0]]), 50000)
@@ -72,7 +72,7 @@ export default function MapContainer(props: { address: any, coordinates: any, se
                 const dx = x1 - x;
                 const dy = y1 - y;
                 const radius = Math.sqrt(dx * dx + dy * dy);
-                console.log(radius)
+                //console.log(radius)
 
                 const innerRadius = 0;
                 const outerRadius = radius * 1.4;
@@ -106,9 +106,9 @@ export default function MapContainer(props: { address: any, coordinates: any, se
   }, [props.coordinates])
 
   useEffect(() => {
-    console.log(props.selectedRocketIndex)
+    //console.log(props.selectedRocketIndex)
     if (props.selectedRocketIndex != null) {
-      console.log(props.coordinates[props.selectedRocketIndex])
+      //console.log(props.coordinates[props.selectedRocketIndex])
       view.setCenter(fromLonLat([props.coordinates[props.selectedRocketIndex][1], props.coordinates[props.selectedRocketIndex][0]]))
       view.setZoom(10)
     }
