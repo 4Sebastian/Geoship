@@ -22,7 +22,7 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     getAllLaunchesAndCoordinates().then(res => {
         props.setLaunches(res.rockets);
         props.setCoordinates(res.coords);
-        fetchAllImages(res.rockets);
+        // fetchAllImages(res.rockets);
     }).catch(error => console.log(error));
 
     function handleHover(value: any) {
@@ -41,31 +41,31 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
         props.setSelectedRocketIndex(index)
     }
 
-    async function fetchImage(query: string) {
-        try {
-            const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CX}&q=${query}&searchType=image&num=1`);
-            const data = await response.json();
-    
-            if (data.items && data.items.length > 0) {
-                return data.items[0].link;
-            } else {
-                return 'https://via.placeholder.com/150';
-            }
-        } catch (error) {
-            console.error('Error fetching image:', error);
-            return 'https://via.placeholder.com/150'; 
-        }
-    }
-
-    async function fetchAllImages(rockets: any[]) {
-        const imagePromises = rockets.map((rocket) => fetchImage(rocket.vehicle.name + "-rocket"));
-        const images = await Promise.all(imagePromises);
-        const imageMap: { [key: string]: string } = {};
-        rockets.forEach((rocket, index) => {
-            imageMap[rocket.vehicle.name] = images[index];
-        });
-        setImages(imageMap);
-    }
+    // async function fetchImage(query: string) {
+    //     try {
+    //         const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CX}&q=${query}&searchType=image&num=1`);
+    //         const data = await response.json();
+    //
+    //         if (data.items && data.items.length > 0) {
+    //             return data.items[0].link;
+    //         } else {
+    //             return 'https://via.placeholder.com/150';
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching image:', error);
+    //         return 'https://via.placeholder.com/150';
+    //     }
+    // }
+    //
+    // async function fetchAllImages(rockets: any[]) {
+    //     const imagePromises = rockets.map((rocket) => fetchImage(rocket.vehicle.name + "-rocket"));
+    //     const images = await Promise.all(imagePromises);
+    //     const imageMap: { [key: string]: string } = {};
+    //     rockets.forEach((rocket, index) => {
+    //         imageMap[rocket.vehicle.name] = images[index];
+    //     });
+    //     setImages(imageMap);
+    // }
 
     return ( 
         <Paper elevation={10} sx={{ height: "400px", pointerEvents: "auto", overflowY: "auto" }}>
