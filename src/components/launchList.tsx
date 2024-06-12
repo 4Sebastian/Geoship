@@ -12,18 +12,21 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [images, setImages] = useState<{ [key: string]: string }>({});
 
-    const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-    const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
+    // const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+    // const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
 
     function handleMouseMove(e: { clientX: any; clientY: any; }) {
         setCursorPosition({ x: e.clientX, y: e.clientY });
     };
 
-    getAllLaunchesAndCoordinates().then(res => {
-        props.setLaunches(res.rockets);
-        props.setCoordinates(res.coords);
-        // fetchAllImages(res.rockets);
-    }).catch(error => console.log(error));
+    useEffect(() => {
+        getAllLaunchesAndCoordinates().then(res => {
+            props.setLaunches(res.rockets);
+            props.setCoordinates(res.coords);
+            // fetchAllImages(res.rockets);
+            console.log("Got launches and coordinates")
+        }).catch(error => console.log(error));
+    }, []);
 
     function handleHover(value: any) {
         setHoveredItem(value);
