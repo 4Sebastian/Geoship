@@ -19,6 +19,7 @@ export default function MapContainer(props: { address: any, coordinates: any, se
     source: new OSM(),
   });
   const [source] = useState(new VectorSource());
+  const [map, setMap] = useState<Map | undefined>(undefined);
 
   const [view] = useState(new View({
     center: [-11000000, 6600000],
@@ -31,14 +32,12 @@ export default function MapContainer(props: { address: any, coordinates: any, se
   });
 
   //Note, this Map must be created on the client side because it is dependent on document, which is client-side only
-  useEffect(() => {
-    new Map({
-      controls: [],
-      layers: [raster, vector],
-      target: 'map',
-      view: view,
-    });
-  }, []);
+  new Map({
+    controls: [],
+    layers: [raster, vector],
+    target: 'map',
+    view: view,
+  });
 
   useEffect(() => {
     if (props.address) {

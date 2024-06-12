@@ -2,12 +2,20 @@
 import { Box, Stack } from '@mui/material'
 
 import React, { useState } from "react";
-import MapContainer from '@/components/mapContainer';
+// import MapContainer from '@/components/mapContainer';
 import Address from '@/components/address';
 import LaunchList from '@/components/launchList';
 import RocketInfo from '@/components/rocketInfo';
 import Distance from '@/components/distanceToRocket';
 import { Coordinate } from 'ol/coordinate';
+
+import dynamic from 'next/dynamic'
+
+const MapContainer = dynamic(
+	() => import('@/components/mapContainer'),
+	{ ssr: false }
+)
+
 
 export default function Home() {
 	const [address, setAddress] = useState(undefined)
