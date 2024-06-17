@@ -12,14 +12,16 @@ import { Point } from 'ol/geom.js';
 import { OSM, Vector as VectorSource } from 'ol/source.js';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
 import { Coordinate } from 'ol/coordinate';
+import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 
 
-export default function MapContainer(props: { address: any, coordinates: any, selectedRocketIndex: any }) {
+export default function MapContainer(props: { address: any, selectedRocketIndex: any }) {
   const raster = new TileLayer({
     source: new OSM(),
   });
   const [source] = useState(new VectorSource());
   const [map, setMap] = useState<Map | undefined>(undefined);
+  const [coords, setCoords] = useState<any[]>([]);
 
   const [view] = useState(new View({
     center: [-11000000, 6600000],
@@ -40,6 +42,14 @@ export default function MapContainer(props: { address: any, coordinates: any, se
   });
 
   useEffect(() => {
+    getAllLaunchesAndCoordinates().then(res => {
+      setCoords(res.coords);
+      // fetchAllImages(res.rockets);
+      console.log("Got launches and coordinates")
+    }).catch(error => console.log(error));
+  }, []);
+
+  useEffect(() => {
     if (props.address) {
       source.removeFeature(addressFeature)
       var feat = new Feature({
@@ -53,15 +63,15 @@ export default function MapContainer(props: { address: any, coordinates: any, se
   }, [props.address])
 
   useEffect(() => {
-    if (props.coordinates) {
+    if (coords) {
       //console.log(props.coordinates);
-      for (let index = 0; index < props.coordinates.length; index++) {
-        if (props.coordinates[index] && props.coordinates[index].length >= 2) {
+      for (let index = 0; index < coords.length; index++) {
+        if (coords[index] && coords[index].length >= 2) {
           //console.log(index);
           //console.log(fromLonLat([props.coordinates[index][1], props.coordinates[index][0]]))
 
           const circleFeature = new Feature({
-            geometry: new Circle(fromLonLat([props.coordinates[index][1], props.coordinates[index][0]]), 50000)
+            geometry: new Circle(fromLonLat([coords[index][1], coords[index][0]]), 50000)
           });
           circleFeature.setStyle(
             new Style({
@@ -102,13 +112,13 @@ export default function MapContainer(props: { address: any, coordinates: any, se
         }
       }
     }
-  }, [props.coordinates])
+  }, [coords])
 
   useEffect(() => {
     //console.log(props.selectedRocketIndex)
     if (props.selectedRocketIndex != null) {
       //console.log(props.coordinates[props.selectedRocketIndex])
-      view.setCenter(fromLonLat([props.coordinates[props.selectedRocketIndex][1], props.coordinates[props.selectedRocketIndex][0]]))
+      view.setCenter(fromLonLat([coords[props.selectedRocketIndex][1], coords[props.selectedRocketIndex][0]]))
       view.setZoom(10)
     }
   }, [props.selectedRocketIndex])

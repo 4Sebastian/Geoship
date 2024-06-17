@@ -1,3 +1,4 @@
+"use server"
 export async function getPadDetailsResponse(padId: string): Promise<Response> {
     return await fetch(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`);
 }
@@ -25,6 +26,9 @@ export async function compileAllLaunchesAndCoordinates(launchDetails: Response[]
 
 export async function getAllLaunchesAndCoordinates(): Promise<{ rockets: any[], coords: any[] }> {
     var res: Response = await getAllLaunchesResponse();
+    if (res.status !== 200) {
+        throw new Error(res.statusText);
+    }
     var body: any = await res.json();
 
     var promises: Promise<Response>[] = [];

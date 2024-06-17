@@ -3,19 +3,30 @@ import { Paper, Stack, Typography } from '@mui/material'
 import React, { useState, useEffect } from "react";
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
+import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 
 type RocketDistance = { name: string, distance: number }
 type RocketDistances = RocketDistance[]
 
-export default function Distance(props: { launches: any[], coordinates: Coordinate[] | undefined, selectedRocket: any, selectedRocketIndex?: number, address: any }) {
+export default function Distance(props: {selectedRocket: any, selectedRocketIndex?: number, address: any }) {
 
     const [distances, setDistances] = useState<RocketDistances>([]);
     const [closestRocket, setClosestRocket] = useState<RocketDistance>();
     const [currentDistance, setCurrentDistance] = useState<string>('');
     const [inRange, setInRange] = useState<string[]>([]);
 
+    const [launches, setLaunches] = useState<any[]>([]);
+    const [coords, setCoords] = useState<any[]>([]);
 
 
+    useEffect(() => {
+        getAllLaunchesAndCoordinates().then(res => {
+            setLaunches(res.rockets);
+            setCoords(res.coords);
+            // fetchAllImages(res.rockets);
+            console.log("Got launches and coordinates")
+        }).catch(error => console.log(error));
+    }, []);
 
 
     function calculateDistance() {
@@ -24,18 +35,18 @@ export default function Distance(props: { launches: any[], coordinates: Coordina
         coordinates2[1] = props.address.geometry.coordinates[1]
         coordinates2[0] = props.address.geometry.coordinates[0]
 
-        if (props.coordinates) {
-            for (let index = 0; index < props.launches.length; index++) {
+        if (coords) {
+            for (let index = 0; index < launches.length; index++) {
                 var coordinates1: number[] = [];
-                coordinates1[0] = props.coordinates[index][1]
-                coordinates1[1] = props.coordinates[index][0]
+                coordinates1[0] = coords[index][1]
+                coordinates1[1] = coords[index][0]
                 //var dis: number = getDistanceFromLatLonInMi(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1])
                 const line = new LineString([coordinates1, coordinates2]);
                 //var dis = vincenty.distVincenty(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1]).distance
                 var dis = getVincentyDistance(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1])
-                console.log(dis)
+                //console.log(dis)
                 //const dis = getLength(line) * 62.77718927508465; 
-                rockets.push({ name: props.launches[index].vehicle.name, distance: dis })
+                rockets.push({ name: launches[index].vehicle.name, distance: dis })
 
             }
         }

@@ -4,13 +4,14 @@ import React, { useState, useEffect } from "react";
 import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 import LaunchListHoverItem from "@/components/launchListHoverItem";
 
-export default function LaunchList(props: { setCoordinates: Function, setSelectedRocket: Function, setSelectedRocketIndex: Function, setLaunches: Function, launches: any }) {
+export default function LaunchList(props: { setSelectedRocket: Function, setSelectedRocketIndex: Function}) {
     const [hoveredItem, setHoveredItem] = useState<any>(null);
     const [estimatedDate, setEstimatedDate] = useState<any>(undefined);
     const [ticking, setTicking] = useState(false);
 
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [images, setImages] = useState<{ [key: string]: string }>({});
+    const [launches, setLaunches] = useState<any[]>([]);
 
     // const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
     // const GOOGLE_CX = process.env.NEXT_PUBLIC_GOOGLE_CX;
@@ -21,8 +22,7 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
     useEffect(() => {
         getAllLaunchesAndCoordinates().then(res => {
-            props.setLaunches(res.rockets);
-            props.setCoordinates(res.coords);
+            setLaunches(res.rockets);
             // fetchAllImages(res.rockets);
             console.log("Got launches and coordinates")
         }).catch(error => console.log(error));
@@ -81,12 +81,12 @@ export default function LaunchList(props: { setCoordinates: Function, setSelecte
 
 
                 <List style={{ overflowY: 'auto' }}>
-                    {props.launches.length == 0 ?
+                    {launches.length == 0 ?
                         <ListItem key="loading">
                             <ListItemText primary={`Loading...`} />
                         </ListItem>
                         :
-                        props.launches.map((value: { id: React.Key | null | undefined; vehicle: { name: any; }; }, index: number) => (
+                        launches.map((value: { id: React.Key | null | undefined; vehicle: { name: any; }; }, index: number) => (
                             <ListItem
                                 key={index}
                                 onMouseMove={handleMouseMove}
