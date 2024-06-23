@@ -1,10 +1,27 @@
 "use server"
+import fakeRocketData from '@/test/fakeRocketData.json';
+import fakePadData from '@/test/fakePadData.json';
+
 export async function getPadDetailsResponse(padId: string): Promise<Response> {
-    return await fetch(`https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`);
+    return await fetchData(
+        `https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`,
+        JSON.stringify(fakePadData)
+    );
 }
 
 export async function getAllLaunchesResponse(): Promise<Response> {
-    return await fetch(`https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`);
+    return await fetchData(
+        `https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`,
+        JSON.stringify(fakeRocketData)
+    );
+}
+
+export async function fetchData(api: string, fakeBody: string): Promise<Response> {
+    if(process.env.STAGE !== "test"){
+        return await fetch(api);
+    }else{
+        return new Response(fakeBody, {status: 200});
+    }
 }
 
 export async function compileAllLaunchesAndCoordinates(launchDetails: Response[], body: any): Promise<{
@@ -40,4 +57,20 @@ export async function getAllLaunchesAndCoordinates(): Promise<{ rockets: any[], 
     }
 
     return await compileAllLaunchesAndCoordinates(await Promise.all(promises), body);
+}
+
+export async function getValidRocketIndex(potentialIndex: string | string[] | undefined): Promise<number | undefined> {
+    console.log(potentialIndex);
+    console.log(typeof potentialIndex);
+    if(typeof potentialIndex !== "string") {
+        return undefined;
+    }
+
+    const parsedIndex = Number(potentialIndex as string);
+
+    if(isNaN(parsedIndex)) {
+        return undefined;
+    }
+
+    return parsedIndex;
 }
