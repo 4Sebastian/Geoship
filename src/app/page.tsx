@@ -2,7 +2,7 @@
 import { Box, Stack } from '@mui/material'
 
 import Address from '@/components/address';
-import LaunchList from '@/components/launchList';
+import LaunchListWithHover from '@/components/launchList/launchListWithHover';
 import RocketInfo from '@/components/rocketInfo';
 import Distance from '@/components/distanceToRocket';
 import { Coordinate } from 'ol/coordinate';
@@ -10,6 +10,7 @@ import { Coordinate } from 'ol/coordinate';
 import dynamic from 'next/dynamic'
 import {getValidRocketIndex} from "@/util/launchUtils";
 import {getValidAddress} from "@/util/addressUtils";
+import LaunchList from "@/components/launchList/launchList";
 
 const MapContainer = dynamic(
 	() => import('@/components/mapContainer'),
