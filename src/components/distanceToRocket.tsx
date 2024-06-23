@@ -1,3 +1,4 @@
+"use client"
 import { Paper, Stack, Typography } from '@mui/material'
 
 import React, { useState, useEffect } from "react";

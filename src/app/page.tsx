@@ -1,8 +1,6 @@
-'use client';
+"use server";
 import { Box, Stack } from '@mui/material'
 
-import React, {useEffect, useState} from "react";
-// import MapContainer from '@/components/mapContainer';
 import Address from '@/components/address';
 import LaunchList from '@/components/launchList';
 import RocketInfo from '@/components/rocketInfo';
@@ -19,25 +17,13 @@ const MapContainer = dynamic(
 )
 
 
-export default function Home({
+export default async function Home({
 								 searchParams,
 							 }: {
 	searchParams: { [key: string]: string | string[] | undefined }
 }) {
-	const [address, setAddress] = useState<any>(undefined)
-	const [selectedRocketIndex, setSelectedRocketIndex] = useState<number>();
-
-	useEffect(() => {
-		getValidRocketIndex(searchParams["selectedRocketIndex"]).then((index) => {
-			setSelectedRocketIndex(index);
-		});
-	}, []);
-
-	useEffect(() => {
-		getValidAddress(searchParams["address"]).then((addr) => {
-			setAddress(addr);
-		});
-	}, [])
+	const address = await getValidAddress(searchParams["address"]);
+	const selectedRocketIndex = await getValidRocketIndex(searchParams["selectedRocketIndex"]);
 
 	return (
 		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
