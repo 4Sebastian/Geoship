@@ -4,14 +4,14 @@ import fakePadData from '@/test/fakePadData.json';
 
 export async function getPadDetailsResponse(padId: string): Promise<Response> {
     return await fetchData(
-        `https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`,
+        `https://fdo.rocketlaunch.live/json/pads?id=${padId}&key=${process.env.ROCKET_TOKEN}`,
         JSON.stringify(fakePadData)
     );
 }
 
 export async function getAllLaunchesResponse(): Promise<Response> {
     return await fetchData(
-        `https://fdo.rocketlaunch.live/json/launches?key=${process.env.NEXT_PUBLIC_ROCKET_TOKEN}`,
+        `https://fdo.rocketlaunch.live/json/launches?key=${process.env.ROCKET_TOKEN}`,
         JSON.stringify(fakeRocketData)
     );
 }
