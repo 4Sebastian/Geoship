@@ -3,7 +3,7 @@ import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '
 
 import React, { useState, useEffect } from "react";
 
-export default function Address(props:{setAddress: Function}) {
+export default function Address() {
     const [address, setAddress] = useState("");
     const [addressSuggestions, setAddressSuggesstions] = useState<any[]>([]);
 
@@ -31,7 +31,7 @@ export default function Address(props:{setAddress: Function}) {
 
     function handleAddress(value: any){
         setAddress(value.properties.formatted)
-        props.setAddress(value)
+        location.assign(`/?address=${JSON.stringify(value)}`);
     }
 
     return (

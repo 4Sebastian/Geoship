@@ -11,6 +11,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import dynamic from 'next/dynamic'
 import {getValidRocketIndex} from "@/util/launchUtils";
+import {getValidAddress} from "@/util/addressUtils";
 
 const MapContainer = dynamic(
 	() => import('@/components/mapContainer'),
@@ -23,21 +24,27 @@ export default function Home({
 							 }: {
 	searchParams: { [key: string]: string | string[] | undefined }
 }) {
-	const [address, setAddress] = useState(undefined)
+	const [address, setAddress] = useState<any>(undefined)
 	const [selectedRocketIndex, setSelectedRocketIndex] = useState<number>();
-	
+
 	useEffect(() => {
 		getValidRocketIndex(searchParams["selectedRocketIndex"]).then((index) => {
 			setSelectedRocketIndex(index);
 		});
 	}, []);
 
+	useEffect(() => {
+		getValidAddress(searchParams["address"]).then((addr) => {
+			setAddress(addr);
+		});
+	}, [])
+
 	return (
 		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
 			<Stack direction="column" justifyContent="space-between" sx={{ width: 1, height: 1, position: "relative", zIndex: 2 }}>
 				<Stack direction="row" justifyContent="space-between" sx={{ padding: 3 }}>
 					<LaunchList/>
-					<Address setAddress={setAddress}/>
+					<Address/>
 				</Stack>
 				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>
 					<Distance selectedRocketIndex={selectedRocketIndex} address={address}/>
