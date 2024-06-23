@@ -1,20 +1,22 @@
 'use client';
 import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '@mui/material'
 
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useCallback, useMemo} from "react";
+import {getAddressSuggestions} from "@/util/addressUtils";
+import { debounce } from "lodash"
 
 export default function Address() {
     const [address, setAddress] = useState("");
     const [addressSuggestions, setAddressSuggesstions] = useState<any[]>([]);
 
+    const updateAddressSuggestions = useMemo(() => debounce(async (address: string) => {
+        const data: any = await getAddressSuggestions(address);
+        setAddressSuggesstions(data.features);
+    }, 500), []);
+
     useEffect(() => {
         if (address != "") {
-            fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=6996746ace5b4605a490e1625c60f468`)
-                .then(async function (response: Response) {
-                    setAddressSuggesstions((await response.json()).features)
-                }).catch((err) => {
-                    console.log(err)
-                })
+            updateAddressSuggestions(address);
         }
     }, [address])
 
