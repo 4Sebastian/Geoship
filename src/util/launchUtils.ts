@@ -59,17 +59,17 @@ export async function getAllLaunchesAndCoordinates(): Promise<{ rockets: any[], 
     return await compileAllLaunchesAndCoordinates(await Promise.all(promises), body);
 }
 
-export async function getValidRocketIndex(potentialIndex: string | string[] | undefined): Promise<number | undefined> {
+export async function getValidRocketIndex(potentialIndex: string | string[] | undefined): Promise<number> {
     console.log(potentialIndex);
     console.log(typeof potentialIndex);
     if(typeof potentialIndex !== "string") {
-        return undefined;
+        return Number.MAX_SAFE_INTEGER;
     }
 
     const parsedIndex = Number(potentialIndex as string);
 
     if(isNaN(parsedIndex)) {
-        return undefined;
+        return Number.MAX_SAFE_INTEGER;
     }
 
     return parsedIndex;

@@ -1,7 +1,6 @@
-"use client"
+"use server"
 import { Paper, Stack, Typography } from '@mui/material'
 
-import React, { useState, useEffect } from "react";
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
 import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
@@ -9,28 +8,29 @@ import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 type RocketDistance = { name: string, distance: number }
 type RocketDistances = RocketDistance[]
 
-export default function Distance(props: {selectedRocketIndex?: number, address: any }) {
+export default async function Distance(props: {selectedRocketIndex: number, address: any }) {
 
-    const [distances, setDistances] = useState<RocketDistances>([]);
-    const [closestRocket, setClosestRocket] = useState<RocketDistance>();
-    const [currentDistance, setCurrentDistance] = useState<string>('');
-    const [inRange, setInRange] = useState<string[]>([]);
+    const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
+    const launches = launchesAndCoordinates.rockets;
+    const coords = launchesAndCoordinates.coords;
 
-    const [launches, setLaunches] = useState<any[]>([]);
-    const [coords, setCoords] = useState<any[]>([]);
+    const distances: RocketDistances = calculateDistance();
+    const closestRocket = getClosestRocket(distances);
+    const inRange = getInRange(distances);
+    const currentDistance = getCurrentDistance(distances, props.selectedRocketIndex);
 
+    function isValidIndex(dis: any[], idx: number): boolean {
+        return (idx < dis.length &&  idx >= 0);
+    }
 
-    useEffect(() => {
-        getAllLaunchesAndCoordinates().then(res => {
-            setLaunches(res.rockets);
-            setCoords(res.coords);
-            // fetchAllImages(res.rockets);
-            console.log("Got launches and coordinates")
-        }).catch(error => console.log(error));
-    }, []);
+    function getCurrentDistance(dis: RocketDistances, idx: number): string {
+        if(isValidIndex(dis, idx)) {
+            return String(distances[props.selectedRocketIndex].distance);
+        }
+        return "";
+    }
 
-
-    function calculateDistance() {
+    function calculateDistance(): RocketDistances {
         var rockets: { name: string, distance: number }[] = [];
         var coordinates2: number[] = [];
         coordinates2[1] = props.address.geometry.coordinates[1]
@@ -51,9 +51,8 @@ export default function Distance(props: {selectedRocketIndex?: number, address: 
 
             }
         }
-        setDistances(rockets)
-        getClosestRocket(rockets)
-        getInRange(rockets)
+
+        return rockets;
     }
 
     function getDistanceFromLatLonInMi(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -138,7 +137,7 @@ export default function Distance(props: {selectedRocketIndex?: number, address: 
         return deg * (Math.PI / 180)
     }
 
-    function getClosestRocket(dis: RocketDistances) {
+    function getClosestRocket(dis: RocketDistances): RocketDistance {
         if (dis.length > 0) {
             var closest: number = 0;
             for (let index = 0; index < dis.length; index++) {
@@ -146,70 +145,54 @@ export default function Distance(props: {selectedRocketIndex?: number, address: 
                     closest = index
                 }
             }
-            setClosestRocket(dis[closest])
+            return dis[closest];
         }
-
+        return {name: "NaN", distance: 0};
     }
 
-    function getInRange(dis: RocketDistances) {
+    function getInRange(dis: RocketDistances): string[] {
         var closeRockets: string[] = [];
         for (let index = 0; index < dis.length; index++) {
             if (dis[index].distance < 50) {
                 closeRockets.push(dis[index].name)
             }
         }
-
-        setInRange(closeRockets)
+        return closeRockets;
     }
-
-    useEffect(() => {
-
-        if (props.address && props.selectedRocketIndex != undefined) {
-            calculateDistance()
-
-        }
-
-    }, [props.selectedRocketIndex, props.address])
-
-    useEffect(() => {
-
-        if (props.selectedRocketIndex != undefined && props.selectedRocketIndex < distances.length) {
-            setCurrentDistance(String(distances[props.selectedRocketIndex].distance))
-        }
-
-    }, [props.selectedRocketIndex, distances])
 
     return (
         <Paper elevation={10} sx={{ padding: 1 }}>
-            {props.selectedRocketIndex != undefined && props.address != undefined ? <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
-                <Stack direction="column" justifyContent="space-between">
-                    <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                        <Typography variant='h5'>
-                            rocket name:
-                        </Typography>
-                        <Typography variant='h5'>
-                            {launches[props.selectedRocketIndex].vehicle.name}
-                        </Typography>
+            {isValidIndex(distances, props.selectedRocketIndex) && props.address != undefined ?
+                <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
+                    <Stack direction="column" justifyContent="space-between">
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
+                            <Typography variant='h5'>
+                                rocket name:
+                            </Typography>
+                            <Typography variant='h5'>
+                                {launches[props.selectedRocketIndex].vehicle.name}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                Launch Location:
+                            </Typography>
+                            <Typography variant='body1'>
+                                {launches[props.selectedRocketIndex].pad.location.name}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                distance:
+                            </Typography>
+                            {closestRocket && <Typography variant='body1'>
+                                {/* {String(closestRocket.distance)} */}
+                                {currentDistance}
+                            </Typography>}
+                        </Stack>
                     </Stack>
-                    <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                        <Typography variant='body1'>
-                            Launch Location:
-                        </Typography>
-                        <Typography variant='body1'>
-                            {launches[props.selectedRocketIndex].pad.location.name}
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                        <Typography variant='body1'>
-                            distance:
-                        </Typography>
-                        {closestRocket && <Typography variant='body1'>
-                            {/* {String(closestRocket.distance)} */}
-                            {currentDistance}
-                        </Typography>}
-                    </Stack>
-                </Stack>
-            </Stack> : <Typography noWrap>Type your Location</Typography>}
+                </Stack> : <Typography noWrap>Type your Location</Typography>
+            }
         </Paper>
     )
 }
