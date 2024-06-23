@@ -1,18 +1,10 @@
-"use client"
+"use server"
 import { Paper, Stack, Typography } from '@mui/material'
-import {useEffect, useState} from "react";
 import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 
-export default function RocketInfo(props: { selectedRocketIndex?: number, address: any}) {
-    const [launches, setLaunches] = useState<any[]>([]);
-
-    useEffect(() => {
-        getAllLaunchesAndCoordinates().then(res => {
-            setLaunches(res.rockets);
-            // fetchAllImages(res.rockets);
-            console.log("Got launches and coordinates")
-        }).catch(error => console.log(error));
-    }, []);
+export default async function RocketInfo(props: { selectedRocketIndex: number, address: any}) {
+    const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
+    const launches = launchesAndCoordinates.rockets;
 
     return (
         

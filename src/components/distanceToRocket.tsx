@@ -35,7 +35,7 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
         if(!props.address){
             return rockets;
         }
-        
+
         var coordinates2: number[] = [];
         coordinates2[1] = props.address.geometry.coordinates[1]
         coordinates2[0] = props.address.geometry.coordinates[0]
