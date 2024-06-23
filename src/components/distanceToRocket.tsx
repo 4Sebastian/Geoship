@@ -8,7 +8,7 @@ import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 type RocketDistance = { name: string, distance: number }
 type RocketDistances = RocketDistance[]
 
-export default function Distance(props: {selectedRocket: any, selectedRocketIndex?: number, address: any }) {
+export default function Distance(props: {selectedRocketIndex?: number, address: any }) {
 
     const [distances, setDistances] = useState<RocketDistances>([]);
     const [closestRocket, setClosestRocket] = useState<RocketDistance>();
@@ -187,7 +187,7 @@ export default function Distance(props: {selectedRocket: any, selectedRocketInde
                             rocket name:
                         </Typography>
                         <Typography variant='h5'>
-                            {props.selectedRocket.vehicle.name}
+                            {launches[props.selectedRocketIndex].vehicle.name}
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
@@ -195,7 +195,7 @@ export default function Distance(props: {selectedRocket: any, selectedRocketInde
                             Launch Location:
                         </Typography>
                         <Typography variant='body1'>
-                            {props.selectedRocket.pad.location.name}
+                            {launches[props.selectedRocketIndex].pad.location.name}
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>

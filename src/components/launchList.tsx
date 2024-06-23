@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 import LaunchListHoverItem from "@/components/launchListHoverItem";
 
-export default function LaunchList(props: { setSelectedRocket: Function, setSelectedRocketIndex: Function}) {
+export default function LaunchList() {
     const [hoveredItem, setHoveredItem] = useState<any>(null);
     const [estimatedDate, setEstimatedDate] = useState<any>(undefined);
     const [ticking, setTicking] = useState(false);
@@ -40,8 +40,7 @@ export default function LaunchList(props: { setSelectedRocket: Function, setSele
     }
 
     function handleClick(value: any, index: number) {
-        props.setSelectedRocket(value)
-        props.setSelectedRocketIndex(index)
+        location.assign(`/?selectedRocketIndex=${index}`);
     }
 
     // async function fetchImage(query: string) {

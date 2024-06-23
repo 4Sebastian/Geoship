@@ -116,7 +116,7 @@ export default function MapContainer(props: { address: any, selectedRocketIndex:
 
   useEffect(() => {
     //console.log(props.selectedRocketIndex)
-    if (props.selectedRocketIndex != null) {
+    if (props.selectedRocketIndex != null && coords && coords.length > props.selectedRocketIndex) {
       //console.log(props.coordinates[props.selectedRocketIndex])
       view.setCenter(fromLonLat([coords[props.selectedRocketIndex][1], coords[props.selectedRocketIndex][0]]))
       view.setZoom(10)

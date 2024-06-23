@@ -1,17 +1,30 @@
+"use client"
 import { Paper, Stack, Typography } from '@mui/material'
+import {useEffect, useState} from "react";
+import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
 
-export default function RocketInfo(props: { selectedRocket: any, address: any}) {
+export default function RocketInfo(props: { selectedRocketIndex?: number, address: any}) {
+    const [launches, setLaunches] = useState<any[]>([]);
+
+    useEffect(() => {
+        getAllLaunchesAndCoordinates().then(res => {
+            setLaunches(res.rockets);
+            // fetchAllImages(res.rockets);
+            console.log("Got launches and coordinates")
+        }).catch(error => console.log(error));
+    }, []);
+
     return (
         
         <Paper elevation={10} sx={{ padding: 1 }}>
-            {props.selectedRocket != null ? <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
+            {(props.selectedRocketIndex != null && launches.length > props.selectedRocketIndex) ? <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
                 <Stack direction="column" justifyContent="space-between">
                     <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
                         <Typography variant='h5'>
                             rocket name:
                         </Typography>
                         <Typography variant='h5'>
-                            {props.selectedRocket.vehicle.name}
+                            {launches[props.selectedRocketIndex].vehicle.name}
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
@@ -19,7 +32,7 @@ export default function RocketInfo(props: { selectedRocket: any, address: any}) 
                             Launch Location:
                         </Typography>
                         <Typography variant='body1'>
-                            {props.selectedRocket.pad.location.name}
+                            {launches[props.selectedRocketIndex].pad.location.name}
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
