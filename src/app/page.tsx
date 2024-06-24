@@ -7,15 +7,11 @@ import RocketInfo from '@/components/rocketInfo';
 import Distance from '@/components/distanceToRocket';
 import { Coordinate } from 'ol/coordinate';
 
-import dynamic from 'next/dynamic'
 import {getValidRocketIndex} from "@/util/launchUtils";
 import {getValidAddress} from "@/util/addressUtils";
 import LaunchList from "@/components/launchList/launchList";
-
-const MapContainer = dynamic(
-	() => import('@/components/mapContainer'),
-	{ ssr: false }
-)
+import Map from "@/components/map/map";
+import {Suspense} from "react";
 
 
 export default async function Home({
@@ -38,9 +34,7 @@ export default async function Home({
 					<RocketInfo selectedRocketIndex={selectedRocketIndex} address = {address}/>
 				</Stack>
 			</Stack>
-			<Box sx={{ position: "absolute", top: 0, right: 0, width: 1, height: 1, zIndex: 1, pointerEvents: "auto" }}>
-				<MapContainer address={address} selectedRocketIndex = {selectedRocketIndex} />
-			</Box>
+			<Map address={address} selectedRocketIndex = {selectedRocketIndex} />
 		</Box>
 	)
 }
