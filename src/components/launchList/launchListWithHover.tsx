@@ -31,7 +31,7 @@ export default function LaunchListWithHover({ launches }:{ launches: any[]}) {
     }
 
     function handleClick(value: any, index: number) {
-        location.assign(`/?selectedRocketIndex=${index}`);
+        location.assign(`/map/?selectedRocketIndex=${index}`);
     }
 
     // async function fetchImage(query: string) {

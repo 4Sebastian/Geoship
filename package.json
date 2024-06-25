@@ -23,10 +23,13 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
     "@emotion/react": "11.11.4",
+    "@emotion/server": "^11.11.0",
     "@emotion/styled": "11.11.5",
     "@mui/icons-material": "5.15.19",
     "@mui/material": "5.15.19",
+    "@mui/material-nextjs": "^5.15.11",
     "@types/lodash": "^4.17.5",
     "lodash": "^4.17.21",
     "next": "14.2.3",

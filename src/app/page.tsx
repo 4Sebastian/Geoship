@@ -1,40 +1,26 @@
 "use server";
-import { Box, Stack } from '@mui/material'
+import {Box, Button, Stack, Typography} from '@mui/material'
 
-import Address from '@/components/address';
-import LaunchListWithHover from '@/components/launchList/launchListWithHover';
-import RocketInfo from '@/components/rocketInfo';
-import Distance from '@/components/distanceToRocket';
-import { Coordinate } from 'ol/coordinate';
-
-import {getValidRocketIndex} from "@/util/launchUtils";
-import {getValidAddress} from "@/util/addressUtils";
-import LaunchList from "@/components/launchList/launchList";
-import Map from "@/components/map/map";
-import {Suspense} from "react";
+import Image from "next/image";
 
 
-export default async function Home({
-								 searchParams,
-							 }: {
-	searchParams: { [key: string]: string | string[] | undefined }
-}) {
-	const address = await getValidAddress(searchParams["address"]);
-	const selectedRocketIndex = await getValidRocketIndex(searchParams["selectedRocketIndex"]);
+export default async function Home() {
 
-	return (
-		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
-			<Stack direction="column" justifyContent="space-between" sx={{ width: 1, height: 1, position: "relative", zIndex: 2 }}>
-				<Stack direction="row" justifyContent="space-between" sx={{ padding: 3 }}>
-					<LaunchList/>
-					<Address/>
-				</Stack>
-				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>
-					<Distance selectedRocketIndex={selectedRocketIndex} address={address}/>
-					<RocketInfo selectedRocketIndex={selectedRocketIndex} address = {address}/>
-				</Stack>
-			</Stack>
-			<Map address={address} selectedRocketIndex = {selectedRocketIndex} />
-		</Box>
-	)
+    return (
+        <Box sx={{ width: 1, height: 1, backgroundColor: '#242430' }}>
+            <Stack direction="row" sx={{width: 1, height: 1}}>
+                <Box sx={{width: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+
+                    <Typography variant="h1" component="div" sx={{color: 'white'}}>Welcome to</Typography>
+                </Box>
+                <Box sx={{width: 1, position: 'relative'}}>
+                    <Image src={"/GeoShipBannerTransparent.png"} alt={"GeoShip Banner"} fill objectFit="contain" loading="eager" />
+                </Box>
+            </Stack>
+
+            <Box sx={{position: 'absolute', bottom: 20, left: "50%", translate: "-50%", width: 'fit-content', zIndex: 1}}>
+                <Button variant="contained" href="/map" color="primary">Go to Map</Button>
+            </Box>
+        </Box>
+    )
 }

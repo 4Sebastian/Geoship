@@ -20,12 +20,12 @@ export default function Address() {
 
     function handleAddressSubmit(code: string){
         if (code == "Enter" && addressSuggestions.length > 0) {
-            location.assign(`/?address=${JSON.stringify(addressSuggestions[0])}`);
+            location.assign(`/map/?address=${JSON.stringify(addressSuggestions[0])}`);
         }
     }
 
     function handleAddressSuggestion(value: any){
-        location.assign(`/?address=${JSON.stringify(value)}`);
+        location.assign(`/map/?address=${JSON.stringify(value)}`);
     }
 
     return (
