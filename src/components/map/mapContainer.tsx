@@ -28,7 +28,6 @@ export default function MapContainer({address, selectedRocketIndex, coords}: {
         center: [-11000000, 6600000],
         zoom: 20,
     });
-    const [addressFeature, setAddressFeature] = useState<Feature>(new Feature());
 
     const vector = new VectorLayer({
         source: source,
@@ -52,13 +51,11 @@ export default function MapContainer({address, selectedRocketIndex, coords}: {
     });
 
     if (address) {
-        source.removeFeature(addressFeature)
         var feat = new Feature({
             geometry: new Point(fromLonLat(address.geometry.coordinates)),
         })
         view.setCenter(fromLonLat(address.geometry.coordinates))
         view.setZoom(20)
-        setAddressFeature(feat)
         source.addFeature(feat);
     }
 
