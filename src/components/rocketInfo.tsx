@@ -1,10 +1,10 @@
 "use server"
 import { Paper, Stack, Typography } from '@mui/material'
-import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
+import {getAllLaunchesAndCoordinates} from "@/util/launch/launchUtils";
 
 export default async function RocketInfo(props: { selectedRocketIndex: number, address: any}) {
     const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
-    const launches = launchesAndCoordinates.rockets;
+    const launches = launchesAndCoordinates.getRockets();
 
     return (
         
@@ -24,7 +24,7 @@ export default async function RocketInfo(props: { selectedRocketIndex: number, a
                             Launch Location:
                         </Typography>
                         <Typography variant='body1'>
-                            {launches[props.selectedRocketIndex].pad.location.name}
+                            {launches[props.selectedRocketIndex].pad.locationName}
                         </Typography>
                     </Stack>
                     <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>

@@ -5,7 +5,7 @@ export type AddressSuggestions = {
 }
 
 export type AddressSuggestion = {
-    coordinates: Array<number>
+    coordinates: [number, number]
     formattedAddress: string
 }
 

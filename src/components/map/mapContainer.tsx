@@ -13,12 +13,13 @@ import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {Coordinate} from 'ol/coordinate';
 import {AddressSuggestion} from "@/util/addressUtils";
+import {CoordinateObj} from "@/util/launch/launchDefinitions";
 
 
 export default function MapContainer({address, selectedRocketIndex, coords}: {
     address: AddressSuggestion | undefined,
     selectedRocketIndex: any,
-    coords: any[]
+    coords: CoordinateObj[]
 }) {
     const raster = new TileLayer({
         source: new OSM(),
@@ -62,10 +63,10 @@ export default function MapContainer({address, selectedRocketIndex, coords}: {
 
     if (coords) {
         for (let index = 0; index < coords.length; index++) {
-            if (coords[index] && coords[index].length >= 2) {
+            if (coords[index]) {
 
                 const circleFeature = new Feature({
-                    geometry: new Circle(fromLonLat([coords[index][1], coords[index][0]]), 50000)
+                    geometry: new Circle(fromLonLat([coords[index].gcs[1], coords[index].gcs[0]]), 50000)
                 });
                 circleFeature.setStyle(
                     new Style({
@@ -106,7 +107,7 @@ export default function MapContainer({address, selectedRocketIndex, coords}: {
     }
 
     if (selectedRocketIndex != null && coords && coords.length > selectedRocketIndex) {
-        view.setCenter(fromLonLat([coords[selectedRocketIndex][1], coords[selectedRocketIndex][0]]))
+        view.setCenter(fromLonLat([coords[selectedRocketIndex].gcs[1], coords[selectedRocketIndex].gcs[0]]))
         view.setZoom(10)
     }
 

@@ -1,11 +1,11 @@
 import {Box, List, ListItem, ListItemText, Paper, Stack, Typography} from '@mui/material'
 
 import React, {useState, useEffect} from "react";
-import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
+import {RocketObj} from "@/util/launch/launchDefinitions";
 
 export default function LaunchListHoverItem(props: {
     cursorPosition: { x: number, y: number },
-    hoveredItem: any,
+    hoveredItem: RocketObj | null | undefined,
     images: { [key: string]: string },
     estimatedDate: any,
     ticking: boolean
@@ -105,7 +105,7 @@ export default function LaunchListHoverItem(props: {
                                         Launch Location:
                                     </Typography>
                                     <Typography variant='body1'>
-                                        {props.hoveredItem.pad.location.name}
+                                        {props.hoveredItem.pad.locationName}
                                     </Typography>
                                 </Stack>
                                 <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
@@ -114,7 +114,7 @@ export default function LaunchListHoverItem(props: {
                                         Launch date:
                                     </Typography>
                                     <Typography variant='body1'>
-                                        {getDate(props.hoveredItem.est_date)}
+                                        {getDate(props.hoveredItem.launchDateDetails)}
                                     </Typography>
                                 </Stack>
                                 <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"

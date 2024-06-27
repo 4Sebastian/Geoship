@@ -1,12 +1,12 @@
 "use server"
 import {Paper, Stack, Typography } from '@mui/material'
 
-import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
+import {getAllLaunchesAndCoordinates} from "@/util/launch/launchUtils";
 import LaunchListWithHover from "@/components/launchList/launchListWithHover";
 
 export default async function LaunchList() {
     const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
-    const launches = launchesAndCoordinates.rockets;
+    const launches = launchesAndCoordinates.getRockets();
 
     return (
         <Paper elevation={10} sx={{ height: "400px", pointerEvents: "auto", overflowY: "auto" }}>

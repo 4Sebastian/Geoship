@@ -7,7 +7,7 @@ import RocketInfo from '@/components/rocketInfo';
 import Distance from '@/components/distanceToRocket';
 import { Coordinate } from 'ol/coordinate';
 
-import {getValidRocketIndex} from "@/util/launchUtils";
+import {getValidRocketIndex} from "@/util/launch/launchUtils";
 import {AddressSuggestion, getValidAddress} from "@/util/addressUtils";
 import LaunchList from "@/components/launchList/launchList";
 import Map from "@/components/map/map";

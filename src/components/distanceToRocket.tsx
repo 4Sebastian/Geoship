@@ -3,7 +3,7 @@ import { Paper, Stack, Typography } from '@mui/material'
 
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
-import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
+import {getAllLaunchesAndCoordinates} from "@/util/launch/launchUtils";
 import {AddressSuggestion} from "@/util/addressUtils";
 
 type RocketDistance = { name: string, distance: number }
@@ -12,8 +12,8 @@ type RocketDistances = RocketDistance[]
 export default async function Distance(props: {selectedRocketIndex: number, address: AddressSuggestion | undefined }) {
 
     const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
-    const launches = launchesAndCoordinates.rockets;
-    const coords = launchesAndCoordinates.coords;
+    const launches = launchesAndCoordinates.getRockets();
+    const coords = launchesAndCoordinates.getCoords();
 
     const distances: RocketDistances = calculateDistance();
     const closestRocket = getClosestRocket(distances);
@@ -44,8 +44,8 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
         if (coords) {
             for (let index = 0; index < launches.length; index++) {
                 var coordinates1: number[] = [];
-                coordinates1[0] = coords[index][1]
-                coordinates1[1] = coords[index][0]
+                coordinates1[0] = coords[index].gcs[1]
+                coordinates1[1] = coords[index].gcs[0]
                 //var dis: number = getDistanceFromLatLonInMi(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1])
                 const line = new LineString([coordinates1, coordinates2]);
                 //var dis = vincenty.distVincenty(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1]).distance
@@ -183,7 +183,7 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
                                 Launch Location:
                             </Typography>
                             <Typography variant='body1'>
-                                {launches[props.selectedRocketIndex].pad.location.name}
+                                {launches[props.selectedRocketIndex].pad.locationName}
                             </Typography>
                         </Stack>
                         <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>

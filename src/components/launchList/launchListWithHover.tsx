@@ -3,9 +3,10 @@ import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mu
 
 import React, { useState } from "react";
 import LaunchListHoverItem from "@/components/launchList/launchListHoverItem";
+import {RocketObj} from "@/util/launch/launchDefinitions";
 
-export default function LaunchListWithHover({ launches }:{ launches: any[]}) {
-    const [hoveredItem, setHoveredItem] = useState<any>(null);
+export default function LaunchListWithHover({ launches }:{ launches: RocketObj[]}) {
+    const [hoveredItem, setHoveredItem] = useState<RocketObj | null>(null);
     const [estimatedDate, setEstimatedDate] = useState<any>(undefined);
     const [ticking, setTicking] = useState(false);
 
@@ -19,10 +20,10 @@ export default function LaunchListWithHover({ launches }:{ launches: any[]}) {
         setCursorPosition({ x: e.clientX, y: e.clientY });
     };
 
-    function handleHover(value: any) {
+    function handleHover(value: RocketObj | null) {
         setHoveredItem(value);
         if (value) {
-            setEstimatedDate(value.t0);
+            setEstimatedDate(value.launchDate);
             setTicking(true);
         } else {
             setEstimatedDate(undefined);
@@ -64,7 +65,7 @@ export default function LaunchListWithHover({ launches }:{ launches: any[]}) {
         <>
             <List style={{ overflowY: 'auto' }}>
                 {
-                    launches.map((value: { id: React.Key | null | undefined; vehicle: { name: any; }; }, index: number) => (
+                    launches.map((value, index: number) => (
                         <ListItem
                             key={index}
                             onMouseMove={handleMouseMove}
