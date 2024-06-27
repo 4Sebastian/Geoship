@@ -1,17 +1,31 @@
 'use client';
-import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '@mui/material'
+import {
+    Box,
+    LinearProgress,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Paper,
+    TextField
+} from '@mui/material'
 
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {AddressSuggestion, AddressSuggestions, getAddressSuggestions} from "@/util/addressUtils";
 import { debounce } from "lodash"
 
 export default function Address() {
     const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const waitTime = 750; //milliseconds
 
-    const updateAddressSuggestions = debounce(async (address: string) => {
+
+    const updateAddressSuggestions = useMemo(() => debounce(async (address: string) => {
         const data: AddressSuggestions = await getAddressSuggestions(address);
         setAddressSuggestions(data.suggestions);
-    }, 500);
+        console.log(address)
+        setIsLoading(false);
+    }, waitTime, {trailing: true}), []);
 
     function validAddresses() {
         if (addressSuggestions.length == 0) { return false; }//If suggestion list empty, don't show
@@ -33,12 +47,19 @@ export default function Address() {
             <Paper elevation={2} sx={{ width: 1 }}>
                 <TextField fullWidth
                            sx={{ display: "inline-block" }}
+                           InputProps={{style: {borderRadius: 0}}}
                            placeholder='Enter your Location'
-                           onChange={(event) => updateAddressSuggestions(event.target.value)}
+                           onChange={(event) => {
+                               setIsLoading(true)
+                               updateAddressSuggestions(event.target.value)
+                           }}
                            onKeyDown={(event) => handleAddressSubmit(event.code)}
                 />
+                {isLoading && <Box sx={{width: 1}}>
+                    <LinearProgress/>
+                </Box>}
             </Paper>
-            {validAddresses() &&
+            {validAddresses() && !isLoading &&
                 <List>
                     {addressSuggestions.map((value: AddressSuggestion) => (
                         <ListItem key={value.formattedAddress}>
