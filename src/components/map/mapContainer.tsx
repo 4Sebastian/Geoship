@@ -12,10 +12,11 @@ import {Point} from 'ol/geom.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {Coordinate} from 'ol/coordinate';
+import {AddressSuggestion} from "@/util/addressUtils";
 
 
 export default function MapContainer({address, selectedRocketIndex, coords}: {
-    address: any,
+    address: AddressSuggestion | undefined,
     selectedRocketIndex: any,
     coords: any[]
 }) {
@@ -52,9 +53,9 @@ export default function MapContainer({address, selectedRocketIndex, coords}: {
 
     if (address) {
         var feat = new Feature({
-            geometry: new Point(fromLonLat(address.geometry.coordinates)),
+            geometry: new Point(fromLonLat(address.coordinates)),
         })
-        view.setCenter(fromLonLat(address.geometry.coordinates))
+        view.setCenter(fromLonLat(address.coordinates))
         view.setZoom(20)
         source.addFeature(feat);
     }

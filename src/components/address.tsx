@@ -2,15 +2,15 @@
 import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '@mui/material'
 
 import React, {useState} from "react";
-import {getAddressSuggestions} from "@/util/addressUtils";
+import {AddressSuggestion, AddressSuggestions, getAddressSuggestions} from "@/util/addressUtils";
 import { debounce } from "lodash"
 
 export default function Address() {
-    const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
+    const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
 
     const updateAddressSuggestions = debounce(async (address: string) => {
-        const data: any = await getAddressSuggestions(address);
-        setAddressSuggestions(data.features);
+        const data: AddressSuggestions = await getAddressSuggestions(address);
+        setAddressSuggestions(data.suggestions);
     }, 500);
 
     function validAddresses() {
@@ -40,10 +40,10 @@ export default function Address() {
             </Paper>
             {validAddresses() &&
                 <List>
-                    {addressSuggestions.map((value) => (
-                        <ListItem key={value.properties.formatted}>
+                    {addressSuggestions.map((value: AddressSuggestion) => (
+                        <ListItem key={value.formattedAddress}>
                             <ListItemButton onClick={() => handleAddressSuggestion(value)}>
-                                <ListItemText primary={`${value.properties.formatted}`} />
+                                <ListItemText primary={`${value.formattedAddress}`} />
                             </ListItemButton>
                         </ListItem>
                     ))}

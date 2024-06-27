@@ -8,7 +8,7 @@ import Distance from '@/components/distanceToRocket';
 import { Coordinate } from 'ol/coordinate';
 
 import {getValidRocketIndex} from "@/util/launchUtils";
-import {getValidAddress} from "@/util/addressUtils";
+import {AddressSuggestion, getValidAddress} from "@/util/addressUtils";
 import LaunchList from "@/components/launchList/launchList";
 import Map from "@/components/map/map";
 import {Suspense} from "react";
@@ -19,7 +19,7 @@ export default async function Home({
 							 }: {
 	searchParams: { [key: string]: string | string[] | undefined }
 }) {
-	const address = await getValidAddress(searchParams["address"]);
+	const address: AddressSuggestion | undefined = await getValidAddress(searchParams["address"]);
 	const selectedRocketIndex = await getValidRocketIndex(searchParams["selectedRocketIndex"]);
 
 	return (

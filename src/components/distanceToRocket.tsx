@@ -4,11 +4,12 @@ import { Paper, Stack, Typography } from '@mui/material'
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
 import {getAllLaunchesAndCoordinates} from "@/util/launchUtils";
+import {AddressSuggestion} from "@/util/addressUtils";
 
 type RocketDistance = { name: string, distance: number }
 type RocketDistances = RocketDistance[]
 
-export default async function Distance(props: {selectedRocketIndex: number, address: any }) {
+export default async function Distance(props: {selectedRocketIndex: number, address: AddressSuggestion | undefined }) {
 
     const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
     const launches = launchesAndCoordinates.rockets;
@@ -37,8 +38,8 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
         }
 
         var coordinates2: number[] = [];
-        coordinates2[1] = props.address.geometry.coordinates[1]
-        coordinates2[0] = props.address.geometry.coordinates[0]
+        coordinates2[1] = props.address.coordinates[1]
+        coordinates2[0] = props.address.coordinates[0]
 
         if (coords) {
             for (let index = 0; index < launches.length; index++) {
