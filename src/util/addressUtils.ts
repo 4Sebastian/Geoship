@@ -31,6 +31,9 @@ export async function getAddressSuggestionsResponse(address: Address): Promise<R
 }
 
 export async function getAddressSuggestions(address: Address): Promise<AddressSuggestions> {
+    if(!address){
+        return {providedAddress: address, suggestions: []};
+    }
     const res: Response = await getAddressSuggestionsResponse(address);
     var data = await res.json();
     console.log(JSON.stringify(data));
