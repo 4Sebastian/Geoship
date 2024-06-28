@@ -23,7 +23,7 @@ export default function Address() {
     const updateAddressSuggestions = useMemo(() => debounce(async (address: string) => {
         const data: AddressSuggestions = await getAddressSuggestions(address);
         setAddressSuggestions(data.suggestions);
-        console.log(address)
+        //console.log(address)
         setIsLoading(false);
     }, waitTime, {trailing: true}), []);
 

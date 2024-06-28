@@ -36,7 +36,7 @@ export async function getAddressSuggestions(address: Address): Promise<AddressSu
     }
     const res: Response = await getAddressSuggestionsResponse(address);
     var data = await res.json();
-    console.log(JSON.stringify(data));
+    //console.log(JSON.stringify(data));
     return parseAddressSuggestions(data, address);
 }
 

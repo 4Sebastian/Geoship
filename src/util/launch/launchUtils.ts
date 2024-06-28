@@ -94,8 +94,8 @@ export async function getAllLaunchesAndCoordinates(): Promise<LaunchesObj> {
 }
 
 export async function getValidRocketIndex(potentialIndex: string | string[] | undefined): Promise<number> {
-    console.log(potentialIndex);
-    console.log(typeof potentialIndex);
+    //console.log(potentialIndex);
+    //console.log(typeof potentialIndex);
     if(typeof potentialIndex !== "string") {
         return Number.MAX_SAFE_INTEGER;
     }
