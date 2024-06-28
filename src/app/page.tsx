@@ -14,7 +14,13 @@ export default async function Home() {
                     <Typography variant="h1" component="div" sx={{color: 'white'}}>Welcome to</Typography>
                 </Box>
                 <Box sx={{width: 1, position: 'relative'}}>
-                    <Image src={"/GeoShipBannerTransparent.png"} alt={"GeoShip Banner"} fill objectFit="contain" loading="eager" />
+                    <Image style={{ objectFit: "contain" }}
+                           src={"/GeoShipBannerTransparent.png"}
+                           alt={"GeoShip Banner"}
+                           fill
+                           loading="eager"
+                           sizes="33vw"
+                           priority/>
                 </Box>
             </Stack>
 
