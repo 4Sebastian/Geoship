@@ -9,9 +9,6 @@ export type AddressSuggestion = {
     formattedAddress: string
 }
 
-export type Address = string
-
-
 export async function getValidAddress(address: string | string[] | undefined): Promise<AddressSuggestion | undefined> {
     if(typeof address !== "string") {
         return undefined;
@@ -26,11 +23,11 @@ export async function getValidAddress(address: string | string[] | undefined): P
     return undefined;
 }
 
-export async function getAddressSuggestionsResponse(address: Address): Promise<Response> {
+export async function getAddressSuggestionsResponse(address: string): Promise<Response> {
     return await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=${process.env.GEOAPIFY_API_KEY}`)
 }
 
-export async function getAddressSuggestions(address: Address): Promise<AddressSuggestions> {
+export async function getAddressSuggestions(address: string): Promise<AddressSuggestions> {
     if(!address){
         return {providedAddress: address, suggestions: []};
     }
@@ -40,7 +37,7 @@ export async function getAddressSuggestions(address: Address): Promise<AddressSu
     return parseAddressSuggestions(data, address);
 }
 
-function parseAddressSuggestions(data: any, address: Address): AddressSuggestions {
+function parseAddressSuggestions(data: any, address: string): AddressSuggestions {
     var res: AddressSuggestions = {
         providedAddress: address,
         suggestions: []
