@@ -15,7 +15,7 @@ import {AddressSuggestion, AddressSuggestions, getAddressSuggestions} from "@/ut
 import { debounce } from "lodash"
 import {route, URLSearchParamsType} from "@/util/routingUtils";
 
-export default function Address({params}: {params: URLSearchParamsType}) {
+export default function Address({params, inputtedAddress}: {params: URLSearchParamsType, inputtedAddress: string | undefined}) {
     const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const waitTime = 750; //milliseconds
@@ -51,6 +51,7 @@ export default function Address({params}: {params: URLSearchParamsType}) {
                            sx={{ display: "inline-block" }}
                            InputProps={{style: {borderRadius: 0}}}
                            placeholder='Enter your Location'
+                           value={inputtedAddress}
                            onChange={(event) => {
                                setIsLoading(true)
                                updateAddressSuggestions(event.target.value)

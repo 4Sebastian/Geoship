@@ -28,7 +28,7 @@ export default async function Home({
 			<Stack direction="column" justifyContent="space-between" sx={{ width: 1, height: 1, position: "relative", zIndex: 2 }}>
 				<Stack direction="row" justifyContent="space-between" sx={{ padding: 3 }}>
 					<LaunchList params={searchParams}/>
-					<Address params={searchParams}/>
+					<Address params={searchParams} inputtedAddress={address?.formattedAddress}/>
 				</Stack>
 				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>
 					<Distance selectedRocketIndex={selectedRocketIndex} address={address}/>
