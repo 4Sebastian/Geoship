@@ -13,8 +13,9 @@ import {
 import React, {useMemo, useState} from "react";
 import {AddressSuggestion, AddressSuggestions, getAddressSuggestions} from "@/util/addressUtils";
 import { debounce } from "lodash"
+import {route, URLSearchParamsType} from "@/util/routingUtils";
 
-export default function Address() {
+export default function Address({params}: {params: URLSearchParamsType}) {
     const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const waitTime = 750; //milliseconds
@@ -34,7 +35,8 @@ export default function Address() {
 
     function handleAddressSubmit(code: string){
         if (code == "Enter" && addressSuggestions.length > 0) {
-            location.assign(`/map/?address=${JSON.stringify(addressSuggestions[0])}`);
+            // location.assign(`/map/?address=${JSON.stringify(addressSuggestions[0])}`);
+            route("/map", {address: JSON.stringify(addressSuggestions[0])}, params);
         }
     }
 
