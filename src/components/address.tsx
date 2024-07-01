@@ -51,7 +51,7 @@ export default function Address({params, inputtedAddress}: {params: URLSearchPar
                            sx={{ display: "inline-block" }}
                            InputProps={{style: {borderRadius: 0}}}
                            placeholder='Enter your Location'
-                           value={inputtedAddress}
+                           defaultValue={inputtedAddress}
                            onChange={(event) => {
                                setIsLoading(true)
                                updateAddressSuggestions(event.target.value)
