@@ -41,7 +41,8 @@ export default function Address({params, inputtedAddress}: {params: URLSearchPar
     }
 
     function handleAddressSuggestion(value: any){
-        location.assign(`/map/?address=${JSON.stringify(value)}`);
+        //location.assign(`/map/?address=${JSON.stringify(value)}`);
+        route("/map", {address: JSON.stringify(value)}, params);
     }
 
     return (
