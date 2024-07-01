@@ -1,50 +1,73 @@
 'use client';
-import { List, ListItem, ListItemButton, ListItemText, Paper, TextField } from '@mui/material'
+import {
+    Box,
+    LinearProgress,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Paper,
+    TextField
+} from '@mui/material'
 
-import React, { useState, useEffect } from "react";
+import React, {useMemo, useState} from "react";
+import {AddressSuggestion, AddressSuggestions, getAddressSuggestions} from "@/util/addressUtils";
+import { debounce } from "lodash"
+import {route, URLSearchParamsType} from "@/util/routingUtils";
 
-export default function Address(props:{setAddress: Function}) {
-    const [address, setAddress] = useState("");
-    const [addressSuggestions, setAddressSuggesstions] = useState<any[]>([]);
+export default function Address({params, inputtedAddress}: {params: URLSearchParamsType, inputtedAddress: string | undefined}) {
+    const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const waitTime = 750; //milliseconds
 
-    useEffect(() => {
-        if (address != "") {
-            fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=6996746ace5b4605a490e1625c60f468`)
-                .then(async function (response: Response) {
-                    setAddressSuggesstions((await response.json()).features)
-                }).catch((err) => {
-                    console.log(err)
-                })
-        }
-    }, [address])
+
+    const updateAddressSuggestions = useMemo(() => debounce(async (address: string) => {
+        const data: AddressSuggestions = await getAddressSuggestions(address);
+        setAddressSuggestions(data.suggestions);
+        //console.log(address)
+        setIsLoading(false);
+    }, waitTime, {trailing: true}), []);
 
     function validAddresses() {
         if (addressSuggestions.length == 0) { return false; }//If suggestion list empty, don't show
-
-        if (address == "") { return false; }//If address input is empty
-            
-        for (const element of addressSuggestions) { //If the current address is a suggestion, don't show
-            if (element.properties.formatted == address) { return false; }
-        }
         return true;
     }
 
-    function handleAddress(value: any){
-        setAddress(value.properties.formatted)
-        props.setAddress(value)
+    function handleAddressSubmit(code: string){
+        if (code == "Enter" && addressSuggestions.length > 0) {
+            // location.assign(`/map/?address=${JSON.stringify(addressSuggestions[0])}`);
+            route("/map", {address: JSON.stringify(addressSuggestions[0])}, params);
+        }
+    }
+
+    function handleAddressSuggestion(value: any){
+        location.assign(`/map/?address=${JSON.stringify(value)}`);
     }
 
     return (
         <Paper elevation={10} sx={{ width: 0.4, height: "min-content", pointerEvents: "auto" }}>
             <Paper elevation={2} sx={{ width: 1 }}>
-                <TextField fullWidth sx={{ display: "inline-block" }} placeholder='Enter your Location' value={address} onChange={(event) => setAddress(event.target.value)}></TextField>
+                <TextField fullWidth
+                           sx={{ display: "inline-block" }}
+                           InputProps={{style: {borderRadius: 0}}}
+                           placeholder='Enter your Location'
+                           value={inputtedAddress}
+                           onChange={(event) => {
+                               setIsLoading(true)
+                               updateAddressSuggestions(event.target.value)
+                           }}
+                           onKeyDown={(event) => handleAddressSubmit(event.code)}
+                />
+                {isLoading && <Box sx={{width: 1}}>
+                    <LinearProgress/>
+                </Box>}
             </Paper>
-            {validAddresses() &&
+            {validAddresses() && !isLoading &&
                 <List>
-                    {addressSuggestions.map((value) => (
-                        <ListItem key={value.properties.formatted}>
-                            <ListItemButton onClick={() => handleAddress(value)}>
-                                <ListItemText primary={`${value.properties.formatted}`} />
+                    {addressSuggestions.map((value: AddressSuggestion) => (
+                        <ListItem key={value.formattedAddress}>
+                            <ListItemButton onClick={() => handleAddressSuggestion(value)}>
+                                <ListItemText primary={`${value.formattedAddress}`} />
                             </ListItemButton>
                         </ListItem>
                     ))}

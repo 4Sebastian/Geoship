@@ -1,0 +1,27 @@
+{
+  "valid_auth": true,
+  "count": 1,
+  "total": 1,
+  "last_page": 1,
+  "result": [
+    {
+      "id": 3,
+      "name": "SLC-40",
+      "location": {
+        "name": "Cape Canaveral SFS",
+        "id": 62,
+        "latitude": "28.488889",
+        "longitude": "-80.577778",
+        "state": {
+          "abbr": "FL",
+          "name": "Florida"
+        },
+        "country": {
+          "code": "US",
+          "name": "United States"
+        }
+      },
+      "full_name": "SLC-40, Cape Canaveral SFS"
+    }
+  ]
+}

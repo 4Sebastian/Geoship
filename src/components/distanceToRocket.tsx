@@ -1,47 +1,63 @@
+"use server"
 import { Paper, Stack, Typography } from '@mui/material'
 
-import React, { useState, useEffect } from "react";
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
+import {getAllLaunchesAndCoordinates} from "@/util/launch/launchUtils";
+import {AddressSuggestion} from "@/util/addressUtils";
 
 type RocketDistance = { name: string, distance: number }
 type RocketDistances = RocketDistance[]
 
-export default function Distance(props: { launches: any[], coordinates: Coordinate[] | undefined, selectedRocket: any, selectedRocketIndex?: number, address: any }) {
+export default async function Distance(props: {selectedRocketIndex: number, address: AddressSuggestion | undefined }) {
 
-    const [distances, setDistances] = useState<RocketDistances>([]);
-    const [closestRocket, setClosestRocket] = useState<RocketDistance>();
-    const [currentDistance, setCurrentDistance] = useState<string>('');
-    const [inRange, setInRange] = useState<string[]>([]);
+    const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
+    const launches = launchesAndCoordinates.getRockets();
+    const coords = launchesAndCoordinates.getCoords();
 
+    const distances: RocketDistances = calculateDistance();
+    const closestRocket = getClosestRocket(distances);
+    const inRange = getInRange(distances);
+    const currentDistance = getCurrentDistance(distances, props.selectedRocketIndex);
 
+    function isValidIndex(dis: any[], idx: number): boolean {
+        return (idx < dis.length &&  idx >= 0);
+    }
 
+    function getCurrentDistance(dis: RocketDistances, idx: number): string {
+        if(isValidIndex(dis, idx)) {
+            return String(distances[props.selectedRocketIndex].distance);
+        }
+        return "";
+    }
 
-
-    function calculateDistance() {
+    function calculateDistance(): RocketDistances {
         var rockets: { name: string, distance: number }[] = [];
-        var coordinates2: number[] = [];
-        coordinates2[1] = props.address.geometry.coordinates[1]
-        coordinates2[0] = props.address.geometry.coordinates[0]
+        if(!props.address){
+            return rockets;
+        }
 
-        if (props.coordinates) {
-            for (let index = 0; index < props.launches.length; index++) {
+        var coordinates2: number[] = [];
+        coordinates2[1] = props.address.coordinates[1]
+        coordinates2[0] = props.address.coordinates[0]
+
+        if (coords) {
+            for (let index = 0; index < launches.length; index++) {
                 var coordinates1: number[] = [];
-                coordinates1[0] = props.coordinates[index][1]
-                coordinates1[1] = props.coordinates[index][0]
+                coordinates1[0] = coords[index].gcs[1]
+                coordinates1[1] = coords[index].gcs[0]
                 //var dis: number = getDistanceFromLatLonInMi(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1])
                 const line = new LineString([coordinates1, coordinates2]);
                 //var dis = vincenty.distVincenty(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1]).distance
                 var dis = getVincentyDistance(coordinates1[0], coordinates1[1], coordinates2[0], coordinates2[1])
-                console.log(dis)
+                //console.log(dis)
                 //const dis = getLength(line) * 62.77718927508465; 
-                rockets.push({ name: props.launches[index].vehicle.name, distance: dis })
+                rockets.push({ name: launches[index].vehicle.name, distance: dis })
 
             }
         }
-        setDistances(rockets)
-        getClosestRocket(rockets)
-        getInRange(rockets)
+
+        return rockets;
     }
 
     function getDistanceFromLatLonInMi(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -126,7 +142,7 @@ export default function Distance(props: { launches: any[], coordinates: Coordina
         return deg * (Math.PI / 180)
     }
 
-    function getClosestRocket(dis: RocketDistances) {
+    function getClosestRocket(dis: RocketDistances): RocketDistance {
         if (dis.length > 0) {
             var closest: number = 0;
             for (let index = 0; index < dis.length; index++) {
@@ -134,70 +150,54 @@ export default function Distance(props: { launches: any[], coordinates: Coordina
                     closest = index
                 }
             }
-            setClosestRocket(dis[closest])
+            return dis[closest];
         }
-
+        return {name: "NaN", distance: 0};
     }
 
-    function getInRange(dis: RocketDistances) {
+    function getInRange(dis: RocketDistances): string[] {
         var closeRockets: string[] = [];
         for (let index = 0; index < dis.length; index++) {
             if (dis[index].distance < 50) {
                 closeRockets.push(dis[index].name)
             }
         }
-
-        setInRange(closeRockets)
+        return closeRockets;
     }
-
-    useEffect(() => {
-
-        if (props.address && props.selectedRocketIndex != undefined) {
-            calculateDistance()
-
-        }
-
-    }, [props.selectedRocketIndex, props.address])
-
-    useEffect(() => {
-
-        if (props.selectedRocketIndex != undefined && props.selectedRocketIndex < distances.length) {
-            setCurrentDistance(String(distances[props.selectedRocketIndex].distance))
-        }
-
-    }, [props.selectedRocketIndex, distances])
 
     return (
         <Paper elevation={10} sx={{ padding: 1 }}>
-            {props.selectedRocketIndex != undefined && props.address != undefined ? <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
-                <Stack direction="column" justifyContent="space-between">
-                    <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                        <Typography variant='h5'>
-                            rocket name:
-                        </Typography>
-                        <Typography variant='h5'>
-                            {props.selectedRocket.vehicle.name}
-                        </Typography>
+            {isValidIndex(distances, props.selectedRocketIndex) && props.address != undefined ?
+                <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
+                    <Stack direction="column" justifyContent="space-between">
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
+                            <Typography variant='h5'>
+                                rocket name:
+                            </Typography>
+                            <Typography variant='h5'>
+                                {launches[props.selectedRocketIndex].vehicle.name}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                Launch Location:
+                            </Typography>
+                            <Typography variant='body1'>
+                                {launches[props.selectedRocketIndex].pad.locationName}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                distance:
+                            </Typography>
+                            {closestRocket && <Typography variant='body1'>
+                                {/* {String(closestRocket.distance)} */}
+                                {currentDistance}
+                            </Typography>}
+                        </Stack>
                     </Stack>
-                    <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                        <Typography variant='body1'>
-                            Launch Location:
-                        </Typography>
-                        <Typography variant='body1'>
-                            {props.selectedRocket.pad.location.name}
-                        </Typography>
-                    </Stack>
-                    <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center" sx={{ width: 1, height: 1 }}>
-                        <Typography variant='body1'>
-                            distance:
-                        </Typography>
-                        {closestRocket && <Typography variant='body1'>
-                            {/* {String(closestRocket.distance)} */}
-                            {currentDistance}
-                        </Typography>}
-                    </Stack>
-                </Stack>
-            </Stack> : <Typography noWrap>Type your Location</Typography>}
+                </Stack> : <Typography noWrap>Type your Location</Typography>
+            }
         </Paper>
     )
 }
