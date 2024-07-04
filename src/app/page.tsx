@@ -1,36 +1,32 @@
-'use client';
-import { Box, Stack } from '@mui/material'
+"use server";
+import {Box, Button, Stack, Typography} from '@mui/material'
 
-import React, { useState } from "react";
-import MapContainer from '@/components/mapContainer';
-import Address from '@/components/address';
-import LaunchList from '@/components/launchList';
-import RocketInfo from '@/components/rocketInfo';
-import Distance from '@/components/distanceToRocket';
-import { Coordinate } from 'ol/coordinate';
+import Image from "next/image";
 
-export default function Home() {
-	const [address, setAddress] = useState(undefined)
-	const [coordinates, setCoordinates] = useState<Coordinate[]>()
-	const [selectedRocket, setSelectedRocket] = useState<any>(null);
-	const [selectedRocketIndex, setSelectedRocketIndex] = useState<number>();
-	const [launches, setLaunches] = useState<any[]>([]);
 
-	return (
-		<Box sx={{ width: "100vw", height: "100vh", pointerEvents: "none" }}>
-			<Stack direction="column" justifyContent="space-between" sx={{ width: 1, height: 1, position: "relative", zIndex: 2 }}>
-				<Stack direction="row" justifyContent="space-between" sx={{ padding: 3 }}>
-					<LaunchList setCoordinates={setCoordinates} setSelectedRocket = {setSelectedRocket} setSelectedRocketIndex = {setSelectedRocketIndex} setLaunches={setLaunches} launches={launches}/>
-					<Address setAddress={setAddress}/>
-				</Stack>
-				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>				
-					<Distance launches = {launches} coordinates={coordinates} selectedRocket = {selectedRocket}selectedRocketIndex={selectedRocketIndex} address={address}/>
-					<RocketInfo selectedRocket = {selectedRocket} address = {address}/>
-				</Stack>
-			</Stack>
-			<Box sx={{ position: "absolute", top: 0, right: 0, width: 1, height: 1, zIndex: 1, pointerEvents: "auto" }}>
-				<MapContainer address={address} coordinates={coordinates} selectedRocketIndex = {selectedRocketIndex} />
-			</Box>
-		</Box>
-	)
+export default async function Home() {
+
+    return (
+        <Box sx={{ width: 1, height: 1, backgroundColor: '#242430' }}>
+            <Stack direction="row" sx={{width: 1, height: 1}}>
+                <Box sx={{width: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+
+                    <Typography variant="h1" component="div" sx={{color: 'white'}}>Welcome to</Typography>
+                </Box>
+                <Box sx={{width: 1, position: 'relative'}}>
+                    <Image style={{ objectFit: "contain" }}
+                           src={"/GeoShipBannerTransparent.png"}
+                           alt={"GeoShip Banner"}
+                           fill
+                           loading="eager"
+                           sizes="33vw"
+                           priority/>
+                </Box>
+            </Stack>
+
+            <Box sx={{position: 'absolute', bottom: 20, left: "50%", translate: "-50%", width: 'fit-content', zIndex: 1}}>
+                <Button variant="contained" href="/map" color="primary">Go to Map</Button>
+            </Box>
+        </Box>
+    )
 }
