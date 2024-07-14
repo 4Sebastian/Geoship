@@ -6,6 +6,15 @@ const theme = createTheme({
         primary: {
             main: "#2c2c2e"
         }
+    },
+    typography: {
+        fontFamily: [
+            "Trueno Light",
+            "Trueno"
+        ].join(','),
+        allVariants: {
+            
+        }
     }
 });
 

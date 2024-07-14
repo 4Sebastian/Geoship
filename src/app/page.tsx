@@ -11,7 +11,7 @@ export default async function Home() {
             <Stack direction="row" sx={{width: 1, height: 1}}>
                 <Box sx={{width: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 
-                    <Typography variant="h1" component="div" sx={{color: 'white'}}>Welcome to</Typography>
+                    <Typography fontFamily="Trueno" variant="h1" component="div" sx={{color: 'white'}}>Welcome to</Typography>
                 </Box>
                 <Box sx={{width: 1, position: 'relative'}}>
                     <Image style={{ objectFit: "contain" }}
