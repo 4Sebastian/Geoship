@@ -8,19 +8,21 @@ export default async function Home() {
 
     return (
         <Box sx={{ width: 1, height: 1, backgroundColor: '#242430' }}>
-            <Stack direction="row" sx={{width: 1, height: 1}}>
-                <Box sx={{width: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-
-                    <Typography fontFamily="Trueno" variant="h1" component="div" sx={{color: 'white'}}>Welcome to</Typography>
+            <Stack direction="row" sx={{width: 1, height: 1}} justifyContent="center">
+                <Box sx={{width: 'fit-content', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Typography fontFamily="Trueno" align="center" variant="h1" component="div" sx={{color: 'white'}} noWrap>Welcome to</Typography>
                 </Box>
-                <Box sx={{width: 1, position: 'relative'}}>
+                <Box sx={{width: 0.25, position: 'relative'}}>
                     <Image style={{ objectFit: "contain" }}
-                           src={"/GeoShipBannerTransparent.png"}
+                           src={"/GeoshipNoTitle.jpg"}
                            alt={"GeoShip Banner"}
                            fill
                            loading="eager"
                            sizes="33vw"
                            priority/>
+                </Box>
+                <Box sx={{width: 'fit-content', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Typography fontFamily="Trueno" variant="h1" component="div" sx={{color: 'white'}}>GEOShip</Typography>
                 </Box>
             </Stack>
 
