@@ -64,7 +64,20 @@ export async function parseAllLaunchesAndCoordinates(launchDetails: Response[], 
                     day: body.result[index].est_date.day,
                     year: body.result[index].est_date.year
                 },
-                slug: body.result[index].slug
+                slug: body.result[index].slug,
+                medias: (body.result[index].media as Array<any>).map((media: any) => {
+                    return {
+                        id: media.id,
+                        url: media.media_url,
+                        account: media.x_accountid,
+                        postId: media.x_postid,
+                    }
+                }),
+                mission: {
+                    id: body.result[index].missions[0].id,
+                    name: body.result[index].missions[0].name,
+                    description: body.result[index].missions[0].description
+                }
             }
 
             coords.push(coord);

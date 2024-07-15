@@ -66,7 +66,20 @@ export type RocketObj = {
         day: number
         year: number
     }
+    medias: MediaSource[]
+    mission: {
+        id: number
+        name: string
+        description: string | null
+    }
     slug: string
+}
+
+export type MediaSource = {
+    id: number
+    url: string
+    account: string
+    postId: string
 }
 
 export type ComplexRocket = RocketObj & {

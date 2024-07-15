@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: 'Trueno';
+    font-style: normal;
+    font-weight: normal;
+    src: url("/fonts/truenobd.otf");
+}
+
+@font-face {
+    font-family: 'Trueno Light';
+    font-style: normal;
+    font-weight: 200;
+    src: url("/fonts/truenolt.otf");
+}
