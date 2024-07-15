@@ -30,7 +30,7 @@ export default async function Home({
 					<LaunchList params={searchParams}/>
 					<Address params={searchParams} inputtedAddress={address?.formattedAddress}/>
 				</Stack>
-				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3 }}>
+				<Stack direction="row" justifyContent="space-between" alignItems="flex-end" sx={{ width: 1, padding: 3, position: "absolute", bottom: 0, right: 0 }}>
 					<Distance selectedRocketIndex={selectedRocketIndex} address={address}/>
 					<RocketInfo selectedRocketIndex={selectedRocketIndex} address = {address}/>
 				</Stack>
