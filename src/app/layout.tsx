@@ -6,6 +6,7 @@ import {AppRouterCacheProvider} from "@mui/material-nextjs/v13-appRouter";
 import theme from "@/app/theme";
 import Image from "next/image";
 import PersonIcon from '@mui/icons-material/Person';
+import Head from "next/head";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,6 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
     <body className={inter.className}>
+    <meta name="google-adsense-account" content="ca-pub-4040139571789711"/>
     <link rel="preload" href="/fonts/truenobd.otf" as="font" type="font/otf" crossOrigin="anonymous"/>
     <link rel="preload" href="/fonts/truenolt.otf" as="font" type="font/otf" crossOrigin="anonymous"/>
     <AppRouterCacheProvider>
