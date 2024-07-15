@@ -3,7 +3,7 @@ import { Box, Stack } from '@mui/material'
 
 import Address from '@/components/address';
 import LaunchListWithHover from '@/components/launchList/launchListWithHover';
-import RocketInfo from '@/components/rocketInfo';
+import RocketInfo from '@/components/rocketInfo/rocketInfo';
 import Distance from '@/components/distanceToRocket';
 import { Coordinate } from 'ol/coordinate';
 
