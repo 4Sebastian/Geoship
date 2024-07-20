@@ -45,7 +45,7 @@ export default function RootLayout({
                 </IconButton>
               </Stack>
             </Paper>
-            <Box sx={{width: 1, height: 1}}>
+            <Box sx={{width: 1, height: 'calc(100vh - 75px)'}}>
               {children}
             </Box>
           </Stack>
