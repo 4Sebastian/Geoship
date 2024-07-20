@@ -1,5 +1,5 @@
 "use server";
-import { Box, Stack } from '@mui/material'
+import {Box, Button, Stack} from '@mui/material'
 
 import Address from '@/components/address';
 import LaunchListWithHover from '@/components/launchList/launchListWithHover';
@@ -36,6 +36,9 @@ export default async function Home({
 				</Stack>
 			</Stack>
 			<Map address={address} selectedRocketIndex = {selectedRocketIndex} />
+			<Box sx={{position: 'absolute', bottom: 20, left: "50%", translate: "-50%", width: 'fit-content', zIndex: 1, pointerEvents: "auto"}}>
+				<Button variant="contained" href="/" color="primary">Go back Home</Button>
+			</Box>
 		</Box>
 	)
 }
