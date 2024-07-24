@@ -1,5 +1,5 @@
 "use server";
-import {Box, Button, Paper, Stack, TextField, Typography} from '@mui/material'
+import {Box, Button, Link, Paper, Stack, TextField, Typography} from '@mui/material'
 
 import Image from "next/image";
 import Grid2 from "@mui/material/Unstable_Grid2";
@@ -69,9 +69,13 @@ export default async function Home() {
                     </Stack>
                 </Box>
             </Box>
-            {/*<Box sx={{ width: 1, height: '100%', backgroundColor: '#13c110'}} >*/}
-            {/*    <Typography>Copy Right & Links</Typography>*/}
-            {/*</Box>*/}
+            <Box sx={{ width: 1, height: '75px', backgroundColor: '#363645', padding: 2}} >
+                <Stack sx={{width: 1, height: 1}} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+                    <Link href={'/map'} sx={{color: 'white'}} variant={'body2'}>Map</Link>
+
+                    <Typography variant={'body1'} color={'white'}>© GEOShip LLC</Typography>
+                </Stack>
+            </Box>
 
             <Box sx={{position: 'absolute', bottom: 20, left: "50%", translate: "-50%", width: 'fit-content', zIndex: 1}}>
                 <Button variant="contained" href="/map" color="primary">Go to Map</Button>
