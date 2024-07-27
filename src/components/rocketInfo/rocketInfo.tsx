@@ -8,7 +8,7 @@ import FakeRocketImage from "@/test/fakeRocketImage.png";
 import TrackRocketButton from "@/components/rocketInfo/trackRocketButton";
 import {Link} from "@mui/material";
 
-export default async function RocketInfo(props: { selectedRocketIndex: number, address: any }) {
+export default async function RocketInfo(props: { selectedRocketIndex: number, address?: any }) {
     const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
     const launches = launchesAndCoordinates.getComplexRockets();
 
