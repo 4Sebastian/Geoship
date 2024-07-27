@@ -7,7 +7,7 @@ export default async function Contact() {
     return (
         <Box sx={{ width: 1, height: '100%'}} >
             <Box sx={{ width: 1, height: 1}} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                <Stack direction={'column'} sx={{width: 1}} justifyContent={'center'} alignItems={'center'} spacing={20}>
+                <Stack direction={'column'} sx={{width: 1}} justifyContent={'center'} alignItems={'center'} spacing={10}>
                     <Typography fontFamily={'Trueno'} variant={'h2'} color={'white'}>Contact Us</Typography>
                     <Stack direction={'row'} sx={{width: 1, height: 1}} alignItems={'center'}>
                         <Box sx={{ width: 0.5, height: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
