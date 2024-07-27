@@ -13,6 +13,10 @@ export class LaunchesObj {
         return this.rockets;
     }
 
+    public getLength(): number {
+        return this.rockets.length;
+    }
+
     public getCoords(): CoordinateObj[]{
         return this.coords;
     }
