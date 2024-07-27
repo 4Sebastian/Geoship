@@ -1,6 +1,6 @@
 import {Box, List, ListItem, ListItemText, Paper, Stack, Typography} from '@mui/material'
 
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import {RocketObj} from "@/util/launch/launchDefinitions";
 
 export default function LaunchListHoverItem(props: {
@@ -21,21 +21,7 @@ export default function LaunchListHoverItem(props: {
         return date.toDateString()
     }
 
-    useEffect(() => {
-        if (props.estimatedDate != undefined) {
-            getTimeTillLaunch()
-        }
-    }, [props.estimatedDate])
-
-
-    useEffect(() => {
-        const timer = setTimeout(() => props.ticking && setCount(count + 1), 1e3)
-        getTimeTillLaunch();
-        return () => clearTimeout(timer)
-    }, [count, props.ticking])
-
-
-    function getTimeTillLaunch() {
+    const getTimeTillLaunch = useCallback(() => {
 
         if (props.estimatedDate != undefined) {
             //"2023-10-26T03:14Z"
@@ -67,7 +53,20 @@ export default function LaunchListHoverItem(props: {
         }
 
 
-    }
+    },[props.estimatedDate]);
+
+    useEffect(() => {
+        if (props.estimatedDate != undefined) {
+            getTimeTillLaunch()
+        }
+    }, [props.estimatedDate, getTimeTillLaunch])
+
+
+    useEffect(() => {
+        const timer = setTimeout(() => props.ticking && setCount(count + 1), 1e3)
+        getTimeTillLaunch();
+        return () => clearTimeout(timer)
+    }, [count, props.ticking, getTimeTillLaunch])
 
 
     return (
