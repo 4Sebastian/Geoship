@@ -26,7 +26,7 @@ export default async function Home({
     return (
         <Box sx={{ width: 1, height: 1, backgroundColor: '#242430', overflowY: 'auto' }}>
             <Title />
-            <RocketPaginator page={pageNumber} />
+            <RocketPaginator page={pageNumber} continuous />
             <Contact />
             <Footer />
             <Box sx={{ position: 'absolute', bottom: 20, left: "50%", translate: "-50%", width: 'fit-content', zIndex: 1 }}>
