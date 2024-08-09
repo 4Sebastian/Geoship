@@ -13,7 +13,7 @@ const theme = createTheme({
             "Trueno"
         ].join(','),
         allVariants: {
-            
+
         }
     }
 });

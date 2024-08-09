@@ -1,7 +1,7 @@
 "use server"
 import fakeRocketData from '@/test/fakeRocketData.json';
 import fakePadData from '@/test/fakePadData.json';
-import {CoordinateObj, LaunchesObj, RocketObj} from "@/util/launch/launchDefinitions";
+import { CoordinateObj, LaunchesObj, RocketObj } from "@/util/launch/launchDefinitions";
 
 export async function getPadDetailsResponse(padId: string): Promise<Response> {
     return await fetchData(
@@ -18,10 +18,10 @@ export async function getAllLaunchesResponse(): Promise<Response> {
 }
 
 export async function fetchData(api: string, fakeBody: string): Promise<Response> {
-    if(process.env.STAGE !== "test"){
+    if (process.env.STAGE !== "test") {
         return await fetch(api);
-    }else{
-        return new Response(fakeBody, {status: 200});
+    } else {
+        return new Response(fakeBody, { status: 200 });
     }
 }
 
@@ -55,7 +55,7 @@ export async function parseAllLaunchesAndCoordinates(launchDetails: Response[], 
                     id: body.result[index].pad.id,
                     name: body.result[index].pad.name,
                     locationId: body.result[index].pad.location.id,
-                    locationName:  body.result[index].pad.location.name
+                    locationName: body.result[index].pad.location.name
                 },
                 launchDescription: body.result[index].launch_description,
                 launchDate: new Date(body.result[index].t0),
@@ -109,13 +109,13 @@ export async function getAllLaunchesAndCoordinates(): Promise<LaunchesObj> {
 export async function getValidRocketIndex(potentialIndex: string | string[] | undefined): Promise<number> {
     //console.log(potentialIndex);
     //console.log(typeof potentialIndex);
-    if(typeof potentialIndex !== "string") {
+    if (typeof potentialIndex !== "string") {
         return Number.MAX_SAFE_INTEGER;
     }
 
     const parsedIndex = Number(potentialIndex as string);
 
-    if(isNaN(parsedIndex)) {
+    if (isNaN(parsedIndex)) {
         return Number.MAX_SAFE_INTEGER;
     }
 

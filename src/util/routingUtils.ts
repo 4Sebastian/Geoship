@@ -1,7 +1,7 @@
 "use server"
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 
-export type URLSearchParamsType= { [key: string]: string | string[] | undefined };
+export type URLSearchParamsType = { [key: string]: string | string[] | undefined };
 
 export async function route(path: string, newParams: URLSearchParamsType = {}, existingParams: URLSearchParamsType = {}) {
     var combinedParams: URLSearchParamsType = existingParams ? existingParams : {};
@@ -11,16 +11,16 @@ export async function route(path: string, newParams: URLSearchParamsType = {}, e
 
     var queryUrl = await convertParamsToString(combinedParams);
 
-    if(queryUrl){
+    if (queryUrl) {
         redirect(`${path}?${queryUrl}`);
-    }else{
+    } else {
         redirect(path);
     }
 }
 
 export async function convertParamsToString(params: URLSearchParamsType): Promise<string> {
     return Object.keys(params).map(function(key: string) {
-        switch(typeof params[key]){
+        switch (typeof params[key]) {
             case "string": return encodeURIComponent(key) + '=' + encodeURIComponent(params[key] as string);
             case "object": return encodeURIComponent(key) + '=' + (params[key] as string[]).map((v) => encodeURIComponent(v)).join(",");
             default: return undefined;

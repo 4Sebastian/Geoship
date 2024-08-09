@@ -3,10 +3,10 @@ import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mu
 
 import React, { useState } from "react";
 import LaunchListHoverItem from "@/components/launchList/launchListHoverItem";
-import {RocketObj} from "@/util/launch/launchDefinitions";
-import {route, URLSearchParamsType} from "@/util/routingUtils";
+import { RocketObj } from "@/util/launch/launchDefinitions";
+import { route, URLSearchParamsType } from "@/util/routingUtils";
 
-export default function LaunchListWithHover({ launches, params }:{ launches: RocketObj[], params: URLSearchParamsType}) {
+export default function LaunchListWithHover({ launches, params }: { launches: RocketObj[], params: URLSearchParamsType }) {
     const [hoveredItem, setHoveredItem] = useState<RocketObj | null>(null);
     const [estimatedDate, setEstimatedDate] = useState<any>(undefined);
     const [ticking, setTicking] = useState(false);
@@ -34,7 +34,7 @@ export default function LaunchListWithHover({ launches, params }:{ launches: Roc
 
     function handleClick(value: any, index: number) {
         // location.assign(`/map/?selectedRocketIndex=${index}`);
-        route("/map", {selectedRocketIndex: String(index)}, params);
+        route("/map", { selectedRocketIndex: String(index) }, params);
     }
 
     // async function fetchImage(query: string) {
@@ -80,7 +80,7 @@ export default function LaunchListWithHover({ launches, params }:{ launches: Roc
                     ))
                 }
             </List>
-            <LaunchListHoverItem  cursorPosition={cursorPosition} estimatedDate={estimatedDate} hoveredItem={hoveredItem} images={images} ticking={ticking}/>
+            <LaunchListHoverItem cursorPosition={cursorPosition} estimatedDate={estimatedDate} hoveredItem={hoveredItem} images={images} ticking={ticking} />
         </>
     )
 }

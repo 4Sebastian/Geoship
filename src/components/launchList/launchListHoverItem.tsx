@@ -1,7 +1,7 @@
-import {Box, List, ListItem, ListItemText, Paper, Stack, Typography} from '@mui/material'
+import { Box, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material'
 
-import React, {useState, useEffect, useCallback} from "react";
-import {RocketObj} from "@/util/launch/launchDefinitions";
+import React, { useState, useEffect, useCallback } from "react";
+import { RocketObj } from "@/util/launch/launchDefinitions";
 
 export default function LaunchListHoverItem(props: {
     cursorPosition: { x: number, y: number },
@@ -53,7 +53,7 @@ export default function LaunchListHoverItem(props: {
         }
 
 
-    },[props.estimatedDate]);
+    }, [props.estimatedDate]);
 
     useEffect(() => {
         if (props.estimatedDate != undefined) {
@@ -71,64 +71,64 @@ export default function LaunchListHoverItem(props: {
 
     return (
 
-                props.hoveredItem ? (
-                    <Paper elevation={5} sx={{
-                        position: 'fixed',
-                        top: props.cursorPosition.y + 10 + 'px',
-                        left: props.cursorPosition.x + 10 + 'px',
-                        width: 'max-content',
-                        height: 0.175
-                    }}>
-                        <Stack direction="row" sx={{height: 1, padding: 1}} spacing={1}>
-                            <Box component="img" sx={{objectFit: 'cover', aspectRatio: 1}}
-                                 src={props.images[props.hoveredItem.vehicle.name] || 'https://via.placeholder.com/150'}
-                                 alt={props.hoveredItem.vehicle.name}
-                                 loading="lazy"
-                            >
+        props.hoveredItem ? (
+            <Paper elevation={5} sx={{
+                position: 'fixed',
+                top: props.cursorPosition.y + 10 + 'px',
+                left: props.cursorPosition.x + 10 + 'px',
+                width: 'max-content',
+                height: 0.175
+            }}>
+                <Stack direction="row" sx={{ height: 1, padding: 1 }} spacing={1}>
+                    <Box component="img" sx={{ objectFit: 'cover', aspectRatio: 1 }}
+                        src={props.images[props.hoveredItem.vehicle.name] || 'https://via.placeholder.com/150'}
+                        alt={props.hoveredItem.vehicle.name}
+                        loading="lazy"
+                    >
 
-                            </Box>
+                    </Box>
 
-                            <Stack direction="column" justifyContent="space-between">
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
-                                       sx={{width: 1, height: 1}}>
-                                    <Typography variant='h5'>
-                                        rocket name:
-                                    </Typography>
-                                    <Typography variant='h5'>
-                                        {props.hoveredItem.vehicle.name}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
-                                       sx={{width: 1, height: 1}}>
-                                    <Typography variant='body1'>
-                                        Launch Location:
-                                    </Typography>
-                                    <Typography variant='body1'>
-                                        {props.hoveredItem.pad.locationName}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
-                                       sx={{width: 1, height: 1}}>
-                                    <Typography variant='body1'>
-                                        Launch date:
-                                    </Typography>
-                                    <Typography variant='body1'>
-                                        {getDate(props.hoveredItem.launchDateDetails)}
-                                    </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
-                                       sx={{width: 1, height: 1}}>
-                                    <Typography variant='body1'>
-                                        Time until launch:
-                                    </Typography>
-                                    <Typography variant='body1'>
-                                        {estimatedDateString}
-                                    </Typography>
-                                </Stack>
-                            </Stack>
+                    <Stack direction="column" justifyContent="space-between">
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
+                            sx={{ width: 1, height: 1 }}>
+                            <Typography variant='h5'>
+                                rocket name:
+                            </Typography>
+                            <Typography variant='h5'>
+                                {props.hoveredItem.vehicle.name}
+                            </Typography>
                         </Stack>
-                    </Paper>
-                ) : <></>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
+                            sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                Launch Location:
+                            </Typography>
+                            <Typography variant='body1'>
+                                {props.hoveredItem.pad.locationName}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
+                            sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                Launch date:
+                            </Typography>
+                            <Typography variant='body1'>
+                                {getDate(props.hoveredItem.launchDateDetails)}
+                            </Typography>
+                        </Stack>
+                        <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center"
+                            sx={{ width: 1, height: 1 }}>
+                            <Typography variant='body1'>
+                                Time until launch:
+                            </Typography>
+                            <Typography variant='body1'>
+                                {estimatedDateString}
+                            </Typography>
+                        </Stack>
+                    </Stack>
+                </Stack>
+            </Paper>
+        ) : <></>
 
     )
 }

@@ -1,22 +1,22 @@
 'use client';
-import {Box} from '@mui/material'
+import { Box } from '@mui/material'
 
-import React, {useState, useEffect} from "react";
-import {Feature} from 'ol';
-import {Circle} from 'ol/geom';
-import {fromLonLat} from 'ol/proj';
+import React, { useState, useEffect } from "react";
+import { Feature } from 'ol';
+import { Circle } from 'ol/geom';
+import { fromLonLat } from 'ol/proj';
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import {Style} from 'ol/style.js';
-import {Point} from 'ol/geom.js';
-import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import {Coordinate} from 'ol/coordinate';
-import {AddressSuggestion} from "@/util/addressUtils";
-import {CoordinateObj} from "@/util/launch/launchDefinitions";
+import { Style } from 'ol/style.js';
+import { Point } from 'ol/geom.js';
+import { OSM, Vector as VectorSource } from 'ol/source.js';
+import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer.js';
+import { Coordinate } from 'ol/coordinate';
+import { AddressSuggestion } from "@/util/addressUtils";
+import { CoordinateObj } from "@/util/launch/launchDefinitions";
 
 
-export default function MapContainer({address, selectedRocketIndex, coords}: {
+export default function MapContainer({ address, selectedRocketIndex, coords }: {
     address: AddressSuggestion | undefined,
     selectedRocketIndex: any,
     coords: CoordinateObj[]
@@ -112,6 +112,6 @@ export default function MapContainer({address, selectedRocketIndex, coords}: {
     }
 
     return (
-        <Box id="map" sx={{width: 1, height: 1}}></Box>
+        <Box id="map" sx={{ width: 1, height: 1 }}></Box>
     )
 }

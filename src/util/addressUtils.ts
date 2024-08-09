@@ -10,13 +10,13 @@ export type AddressSuggestion = {
 }
 
 export async function getValidAddress(address: string | string[] | undefined): Promise<AddressSuggestion | undefined> {
-    if(typeof address !== "string") {
+    if (typeof address !== "string") {
         return undefined;
     }
 
-    try{
+    try {
         return JSON.parse(address) as AddressSuggestion;
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
 
@@ -28,8 +28,8 @@ export async function getAddressSuggestionsResponse(address: string): Promise<Re
 }
 
 export async function getAddressSuggestions(address: string): Promise<AddressSuggestions> {
-    if(!address){
-        return {providedAddress: address, suggestions: []};
+    if (!address) {
+        return { providedAddress: address, suggestions: [] };
     }
     const res: Response = await getAddressSuggestionsResponse(address);
     var data = await res.json();
@@ -43,7 +43,7 @@ function parseAddressSuggestions(data: any, address: string): AddressSuggestions
         suggestions: []
     };
 
-    for(var feature of data.features){
+    for (var feature of data.features) {
         var suggestion: AddressSuggestion = {
             coordinates: feature.geometry.coordinates,
             formattedAddress: feature.properties.formatted

@@ -3,13 +3,13 @@ export class LaunchesObj {
     coords: CoordinateObj[];
     complexRockets: ComplexRocket[];
 
-    constructor(rockets: RocketObj[] = [], coords: CoordinateObj[] = []){
+    constructor(rockets: RocketObj[] = [], coords: CoordinateObj[] = []) {
         this.rockets = rockets;
         this.coords = coords;
         this.complexRockets = this.computeComplexRockets(rockets, coords);
     }
 
-    public getRockets(): RocketObj[]{
+    public getRockets(): RocketObj[] {
         return this.rockets;
     }
 
@@ -17,22 +17,22 @@ export class LaunchesObj {
         return this.rockets.length;
     }
 
-    public getCoords(): CoordinateObj[]{
+    public getCoords(): CoordinateObj[] {
         return this.coords;
     }
 
-    public getComplexRockets(): ComplexRocket[]{
+    public getComplexRockets(): ComplexRocket[] {
         return this.complexRockets;
     }
 
-    public computeComplexRockets(rockets: RocketObj[] = [], coords: CoordinateObj[] = []): ComplexRocket[]{
-        if(rockets.length != coords.length){
+    public computeComplexRockets(rockets: RocketObj[] = [], coords: CoordinateObj[] = []): ComplexRocket[] {
+        if (rockets.length != coords.length) {
             return []
         }
 
         var res: ComplexRocket[] = [];
 
-        for(var index in rockets){
+        for (var index in rockets) {
             var complexRocket: ComplexRocket = {
                 ...rockets[index],
                 coord: coords[index]

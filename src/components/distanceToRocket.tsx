@@ -3,13 +3,13 @@ import { Paper, Stack, Typography } from '@mui/material'
 
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
-import {getAllLaunchesAndCoordinates} from "@/util/launch/launchUtils";
-import {AddressSuggestion} from "@/util/addressUtils";
+import { getAllLaunchesAndCoordinates } from "@/util/launch/launchUtils";
+import { AddressSuggestion } from "@/util/addressUtils";
 
 type RocketDistance = { name: string, distance: number }
 type RocketDistances = RocketDistance[]
 
-export default async function Distance(props: {selectedRocketIndex: number, address: AddressSuggestion | undefined }) {
+export default async function Distance(props: { selectedRocketIndex: number, address: AddressSuggestion | undefined }) {
 
     const launchesAndCoordinates = await getAllLaunchesAndCoordinates();
     const launches = launchesAndCoordinates.getRockets();
@@ -21,11 +21,11 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
     const currentDistance = getCurrentDistance(distances, props.selectedRocketIndex);
 
     function isValidIndex(dis: any[], idx: number): boolean {
-        return (idx < dis.length &&  idx >= 0);
+        return (idx < dis.length && idx >= 0);
     }
 
     function getCurrentDistance(dis: RocketDistances, idx: number): string {
-        if(isValidIndex(dis, idx)) {
+        if (isValidIndex(dis, idx)) {
             return String(distances[props.selectedRocketIndex].distance);
         }
         return "";
@@ -33,7 +33,7 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
 
     function calculateDistance(): RocketDistances {
         var rockets: { name: string, distance: number }[] = [];
-        if(!props.address){
+        if (!props.address) {
             return rockets;
         }
 
@@ -65,35 +65,35 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
 
         const dLat = (lat2 - lat1) * (Math.PI / 180);
         const dLon = (lon2 - lon1) * (Math.PI / 180);
-    
+
         const a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
             Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    
+
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const dis = earthRadius * c;
-    
+
         return dis;
     }
 
     function getVincentyDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
         const a = 6378137; // Semi-major axis of the Earth (in meters)
         const f = 1 / 298.257223563; // Flattening of the Earth
-    
-        const toRadians = (angle : number) => (angle * Math.PI) / 180;
-    
+
+        const toRadians = (angle: number) => (angle * Math.PI) / 180;
+
         const phi1 = toRadians(lat1);
         const phi2 = toRadians(lat2);
         const deltaLambda = toRadians(lon2 - lon1);
-    
+
         const U1 = Math.atan((1 - f) * Math.tan(phi1));
         const U2 = Math.atan((1 - f) * Math.tan(phi2));
         const sinU1 = Math.sin(U1);
         const cosU1 = Math.cos(U1);
         const sinU2 = Math.sin(U2);
         const cosU2 = Math.cos(U2);
-    
+
         let lambda = deltaLambda;
         let lambdaP;
         let iterationLimit = 100;
@@ -106,7 +106,7 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
         let cosSqAlpha;
         let cos2SigmaM;
         let C;
-    
+
         do {
             sinLambda = Math.sin(lambda);
             cosLambda = Math.cos(lambda);
@@ -121,20 +121,20 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
             lambda = deltaLambda + (1 - C) * f * sinAlpha *
                 (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM ** 2)));
         } while (Math.abs(lambda - lambdaP) > 1e-12 && --iterationLimit > 0);
-    
+
         if (iterationLimit === 0) {
             console.warn('Vincenty formula did not converge');
             return NaN; // Not converged
         }
-    
+
         const uSq = cosSqAlpha * (a ** 2 - (a * Math.sin(sigma)) ** 2) / ((a * Math.cos(sigma)) ** 2);
         const A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
         const B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
         const deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM ** 2) -
             B / 6 * cos2SigmaM * (-3 + 4 * sinSigma ** 2) * (-3 + 4 * cos2SigmaM ** 2)));
-    
+
         const distance = a * A * (sigma - deltaSigma); // Result in meters
-    
+
         return distance;
     }
 
@@ -152,7 +152,7 @@ export default async function Distance(props: {selectedRocketIndex: number, addr
             }
             return dis[closest];
         }
-        return {name: "NaN", distance: 0};
+        return { name: "NaN", distance: 0 };
     }
 
     function getInRange(dis: RocketDistances): string[] {
