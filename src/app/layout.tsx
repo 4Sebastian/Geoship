@@ -40,7 +40,7 @@ export default function RootLayout({
                         style={{ borderRadius: '5px' }} />
                       <Typography fontFamily="Trueno" variant="h5">GEOShip</Typography>
                     </Stack>
-                    <IconButton aria-label="Profile" color="primary">
+                    <IconButton aria-label="Profile" color="primary" href='/user'>
                       <PersonIcon fontSize="large" />
                     </IconButton>
                   </Stack>
