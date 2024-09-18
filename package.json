@@ -33,7 +33,7 @@
     "@types/lodash": "4.17.5",
     "@types/ua-parser-js": "0.7.39",
     "lodash": "4.17.21",
-    "next": "14.2.3",
+    "next": "14.2.12",
     "node-vincenty": "0.0.6",
     "ol": "9.2.4",
     "ua-parser-js": "1.0.38"
